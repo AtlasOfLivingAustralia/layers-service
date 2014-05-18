@@ -400,6 +400,7 @@ public class GeometryServiceTest {
     }
 
     @Test
+    @Ignore
     public void testFileUploadMultipart() throws Exception {
         // String json =
         // "{\"user_id\": \"1551\", \"api_key\": \"b3f3c932-ba88-4ad5-b429-f947475024af\"}";
@@ -646,6 +647,7 @@ public class GeometryServiceTest {
     }
 
     @Test
+    @Ignore
     public void testWktPointOfInterestIntersect() throws Exception {
         String wkt = "POLYGON((149.09561600948 -35.340029589556,149.1811033752 -35.340029589556,149.1811033752 -35.271806227303,149.09561600948 -35.271806227303,149.09561600948 -35.340029589556))";
 
@@ -681,6 +683,7 @@ public class GeometryServiceTest {
     }    
 
     @Test
+    @Ignore
     public void testPointOfInterestObjectIntersect() throws Exception {
         HttpClient httpClient = new HttpClient();
         GetMethod get = new GetMethod("http://spatial-dev.ala.org.au/layers-service/intersect/poi/object/3742602");
