@@ -67,7 +67,6 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
         <script type="text/javascript" src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/hoverintent-min.js"></script>
         <script type="text/javascript" src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/superfish/superfish.js"></script>
         <script type="text/javascript" src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/jquery.autocomplete.js"></script>
-        <script type="text/javascript" src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/uservoice.js"></script>
 
         <script type="text/javascript">
 

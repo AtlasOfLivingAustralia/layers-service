@@ -47,6 +47,7 @@
                     </tr>
                     <c:forEach items="${layers}" var="layer" varStatus="status">
                         <tr>
+                            <td>${layer.id}</td>
                             <td>${layer.name}</td>
                             <td>${layer.displayname}</td>
                             <td>${layer.type}</td>
