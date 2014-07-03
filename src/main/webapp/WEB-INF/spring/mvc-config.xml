@@ -16,17 +16,6 @@
     <!-- Forwards requests to the "/" resource to the "welcome" view -->
     <mvc:view-controller path="/" view-name="index"/>
 
-    <!-- Application Message Bundle -->
-    <!--
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
-          p:basenames="messages" />
-    -->
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="/WEB-INF/messages/messages" />
-        <property name="cacheSeconds" value="0" />
-    </bean>
-
-
     <!-- Declare the Interceptor -->
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"

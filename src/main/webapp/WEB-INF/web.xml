@@ -62,11 +62,10 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-    <!--
-    <listener>
-        <description>db connection</description>
-        <listener-class>org.ala.layers.util.DBConnection</listener-class>
-    </listener>
-    -->
+
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>file:/data/layers-service/config/log4j.properties</param-value>
+    </context-param>
 
 </web-app>
