@@ -86,35 +86,41 @@ public class FieldsService {
     public
     @ResponseBody
     Field oneField(@PathVariable("id") String id, HttpServletRequest req) {
-        logger.info("calling /field/" + id);
-        //test field id value
-        int len = Math.min(6, id.length());
-        id = id.substring(0, len);
-        char prefix = id.toUpperCase().charAt(0);
-        String number = id.substring(2, len);
-        boolean numberOk = false;
         try {
-            int i = Integer.parseInt(number);
-            numberOk = true;
+            logger.info("calling /field/" + id);
+            //test field id value
+            int len = Math.min(6, id.length());
+            id = id.substring(0, len);
+            char prefix = id.toUpperCase().charAt(0);
+            String number = id.substring(2, len);
+            boolean numberOk = false;
+            try {
+                int i = Integer.parseInt(number);
+                numberOk = true;
+            } catch (Exception e) {
+                logger.error("An error has occurred");
+                logger.error(ExceptionUtils.getFullStackTrace(e));
+                return null;
+            }
+
+            if (prefix <= 'Z' && prefix >= 'A' && numberOk) {
+
+                //Adam: not sure if this was correct
+                //String query = "SELECT pid, id, name, \"desc\" FROM objects WHERE fid='" + id + "';";
+                //            String query = "SELECT * from fields WHERE enabled=TRUE and id = '" + id + "';";
+                //            logger.debug("Executing sql: " + query);
+                //            ResultSet r = DBConnection.query(query);
+                //            return Utils.resultSetToJSON(r);
+
+                Field f = fieldDao.getFieldById(id);
+                f.setObjects(objectDao.getObjectsById(id));
+                return f;
+            } else {
+                //error
+                return null;
+            }
         } catch (Exception e) {
-            logger.error("An error has occurred");
-            logger.error(ExceptionUtils.getFullStackTrace(e));
-        }
-
-        if (prefix <= 'Z' && prefix >= 'A' && numberOk) {
-
-            //Adam: not sure if this was correct
-            //String query = "SELECT pid, id, name, \"desc\" FROM objects WHERE fid='" + id + "';";
-//            String query = "SELECT * from fields WHERE enabled=TRUE and id = '" + id + "';";
-//            logger.debug("Executing sql: " + query);
-//            ResultSet r = DBConnection.query(query);
-//            return Utils.resultSetToJSON(r);
-
-            Field f = fieldDao.getFieldById(id);
-            f.setObjects(objectDao.getObjectsById(id));
-            return f;
-        } else {
-            //error
+            logger.error("field/{id} error", e);
             return null;
         }
     }
