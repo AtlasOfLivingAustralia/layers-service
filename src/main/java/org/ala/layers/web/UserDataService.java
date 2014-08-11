@@ -444,11 +444,12 @@ public class UserDataService {
                 listHighlight = new ArrayList<QueryField>();
             }
 
-            boolean[] valid = null;
+            int [] idx = null;
             if (lsid != null) {
                 Object[] data = (Object[]) RecordsLookup.getData(lsid);
                 points = (double[]) data[1];
                 pointsBB = (double[]) data[4];
+                idx = (int[]) data[5];
 
                 if (points == null || points.length == 0
                         || pointsBB[0] > bb[1][0] || pointsBB[2] < bb[0][0]
@@ -469,7 +470,37 @@ public class UserDataService {
                     }
                     if (colourMode != null) {
                         if (fields.get(j).getName().equals(colourMode)) {
-                            colours = fields.get(j);
+                            synchronized (fields.get(j)) {
+                                //need to resize 'colours' facet to the correct length and store as new QueryField
+                                for (int k = 0; k < fields.size(); k++) {
+                                    if (fields.get(k).getName().equals(colourMode + " resized")) {
+                                        colours = fields.get(k);
+                                    }
+                                }
+
+                                if (colours == null) {
+                                    colours = fields.get(j);
+
+                                    //does it need to be rebuilt to the correct length?
+                                    int count = colours.getIntData() != null ? colours.getIntData().length :
+                                            colours.getLongData() != null ? colours.getLongData().length :
+                                                    colours.getFloatData() != null ? colours.getFloatData().length :
+                                                            colours.getDoubleData() != null ? colours.getDoubleData().length : 0;
+                                    if (count != points.length / 2) {
+                                        QueryField qf = new QueryField();
+                                        qf.setDisplayName(colours.getDisplayName());
+                                        qf.setName(colours.getName() + " resized");
+                                        for (int k = 0; k < idx.length; k++) {
+                                            qf.add(colours.getAsString(idx[k]));
+                                        }
+                                        qf.store();
+
+                                        fields.add(qf);
+
+                                        colours = qf;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -494,9 +525,6 @@ public class UserDataService {
                 double grid_height_mult = (height / (pbbox[1] - pbbox[3])) / (256 / divs);
                 int[][] gridCounts = new int[divs][divs];
                 for (i = 0; i < points.length; i += 2) {
-                    if (valid != null && !valid[i / 2]) {
-                        continue;
-                    }
                     x = (int) ((SpatialUtils.convertLngToPixel(points[i]) - pbbox[0]) * grid_width_mult);
                     y = (int) ((SpatialUtils.convertLatToPixel(points[i + 1]) - pbbox[3]) * grid_height_mult);
                     if (x >= 0 && x < divs && y >= 0 && y < divs) {
@@ -523,9 +551,6 @@ public class UserDataService {
                 if (name.equals("circle")) {
                     if (colours == null) {
                         for (i = 0; i < points.length; i += 2) {
-                            if (valid != null && !valid[i / 2]) {
-                                continue;
-                            }
                             if (points[i] >= bb[0][0] && points[i] <= bb[1][0]
                                     && points[i + 1] >= bb[0][1] && points[i + 1] <= bb[1][1]) {
                                 x = (int) ((SpatialUtils.convertLngToPixel(points[i]) - pbbox[0]) * width_mult);
@@ -537,12 +562,10 @@ public class UserDataService {
                         int prevColour = -1;    //!= colours[0]
                         g.setColor(new Color(prevColour));
                         for (i = 0; i < points.length; i += 2) {
-                            if (valid != null && !valid[i / 2]) {
-                                continue;
-                            }
                             if (points[i] >= bb[0][0] && points[i] <= bb[1][0]
                                     && points[i + 1] >= bb[0][1] && points[i + 1] <= bb[1][1]) {
-                                int thisColour = colours.getColour(i / 2);
+                                //colours is made the correct length, see above
+                                int thisColour = colours.getColour(i/2);
                                 if (thisColour != prevColour) {
                                     g.setColor(new Color(thisColour));
                                     prevColour = thisColour;
@@ -560,13 +583,12 @@ public class UserDataService {
                     g.setColor(new Color(255, 0, 0, 255));
                     int sz = size + HIGHLIGHT_RADIUS;
                     int w = sz * 2 + 1;
+
                     for (i = 0; i < points.length; i += 2) {
-                        if (valid != null && !valid[i / 2]) {
-                            continue;
-                        }
                         if (points[i] >= bb[0][0] && points[i] <= bb[1][0]
                                 && points[i + 1] >= bb[0][1] && points[i + 1] <= bb[1][1]) {
-                            if (facet.isValid(listHighlight, i / 2)) {
+
+                            if (facet.isValid(listHighlight, idx[i / 2])) {
                                 x = (int) ((SpatialUtils.convertLngToPixel(points[i]) - pbbox[0]) * width_mult);
                                 y = (int) ((SpatialUtils.convertLatToPixel(points[i + 1]) - pbbox[3]) * height_mult);
                                 g.drawOval(x - sz, y - sz, w, w);

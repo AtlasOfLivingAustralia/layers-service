@@ -127,6 +127,25 @@ public class RecordsLookup {
         }
         output[4] = new double[]{minX, minY, maxX, maxY};
 
+        //need mapping between facet points and header_id index because facets use datasets from header_id
+        int [] idx = new int[points.length/2];
+        if (facet_id.isEmpty()) {
+            for(int i=0;i<idx.length;i++) {
+                idx[i] = i;
+            }
+        } else {
+            //number of existing_valid=true values should equal points.length
+            int pos = 0;
+            boolean[] existing_valid = userDataDao.getBooleanArray(header_id, facet_id);
+            for(int i=0;i<existing_valid.length;i++) {
+                if (existing_valid[i]) {
+                    idx[pos] = i;
+                    pos++;
+                }
+            }
+        }
+        output[5] = idx;
+
         addData(key, output);
 
         return selections.get(key);
