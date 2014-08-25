@@ -24,10 +24,7 @@ import org.ala.layers.dto.Field;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Adam
@@ -85,7 +82,10 @@ public class FieldsService {
     @RequestMapping(value = WS_FIELD_ID, method = RequestMethod.GET)
     public
     @ResponseBody
-    Field oneField(@PathVariable("id") String id, HttpServletRequest req) {
+    Field oneField(@PathVariable("id") String id,
+                   @RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
+                   @RequestParam(value = "pageSize", required = false, defaultValue = "-1") Integer pageSize,
+                   HttpServletRequest req) {
         try {
             logger.info("calling /field/" + id);
             //test field id value
@@ -104,16 +104,9 @@ public class FieldsService {
             }
 
             if (prefix <= 'Z' && prefix >= 'A' && numberOk) {
-
-                //Adam: not sure if this was correct
-                //String query = "SELECT pid, id, name, \"desc\" FROM objects WHERE fid='" + id + "';";
-                //            String query = "SELECT * from fields WHERE enabled=TRUE and id = '" + id + "';";
-                //            logger.debug("Executing sql: " + query);
-                //            ResultSet r = DBConnection.query(query);
-                //            return Utils.resultSetToJSON(r);
-
                 Field f = fieldDao.getFieldById(id);
-                f.setObjects(objectDao.getObjectsById(id));
+                f.setObjects(objectDao.getObjectsById(id, start, pageSize));
+
                 return f;
             } else {
                 //error

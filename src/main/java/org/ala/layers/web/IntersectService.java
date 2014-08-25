@@ -21,12 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -112,8 +107,29 @@ public class IntersectService {
 
     @RequestMapping(value = WS_INTERSECT_BATCH, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Map batch(@RequestParam(value = "fids", required = false, defaultValue = "") String fids, @RequestParam(value = "points", required = false, defaultValue = "") String pointsString,
+    public Map batch(@RequestParam(value = "fids", required = false, defaultValue = "") String fids,
+                      @RequestParam(value = "points", required = false, defaultValue = "") String pointsString,
                      HttpServletRequest request, HttpServletResponse response) {
+
+        BatchConsumer.start(layerIntersectDao, userProperties.getProperty("batch_path"));
+
+        //help get params when they don't pick up automatically from a POST
+        try {
+            if ("POST".equalsIgnoreCase(request.getMethod()) && fids.isEmpty() && pointsString.isEmpty()) {
+                Scanner s = new Scanner(request.getInputStream(), "UTF-8").useDelimiter("\\A");
+                String body = s.hasNext() ? s.next() : "";
+
+                for (String param : body.split("&")) {
+                    if (param.startsWith("fids=")) {
+                        fids = param.substring(5);
+                    } else if (param.startsWith("points=")) {
+                        pointsString = param.substring(7);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("failed to read POST body for: " + WS_INTERSECT_BATCH, e);
+        }
 
         Map map = new HashMap();
         String batchId = null;
@@ -151,7 +167,6 @@ public class IntersectService {
             } else if (countFields > fieldsLimit) {
                 map.put("error", "Too many fields.  Maximum is " + fieldsLimit);
             } else {
-                BatchConsumer.start(layerIntersectDao);
                 batchId = BatchProducer.produceBatch(userProperties.getProperty("batch_path"), "request address:" + request.getRemoteAddr(), fids, pointsString);
 
                 map.put("batchId", batchId);
@@ -172,6 +187,8 @@ public class IntersectService {
     @ResponseBody
     public Map batchStatus(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 
+        BatchConsumer.start(layerIntersectDao, userProperties.getProperty("batch_path"));
+
         Map map = new HashMap();
         try {
             BatchProducer.addInfoToMap(userProperties.getProperty("batch_path"), id, map);
@@ -187,6 +204,8 @@ public class IntersectService {
 
     @RequestMapping(value = WS_INTERSECT_BATCH_DOWNLOAD, method = RequestMethod.GET)
     public void batchDownload(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+
+        BatchConsumer.start(layerIntersectDao, userProperties.getProperty("batch_path"));
 
         try {
             Map map = new HashMap();

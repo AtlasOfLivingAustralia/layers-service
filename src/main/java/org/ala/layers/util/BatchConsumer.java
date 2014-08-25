@@ -14,11 +14,7 @@
  ***************************************************************************/
 package org.ala.layers.util;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,13 +30,11 @@ import org.ala.layers.dao.LayerIntersectDAO;
 public class BatchConsumer {
     static BatchConsumerThread thread = null;
     static LinkedBlockingQueue<String> waitingBatchDirs;
-    static LayerIntersectDAO layerIntersectDao;
 
-    public static void start(LayerIntersectDAO layerIntersectDao) {
+    synchronized public static void start(LayerIntersectDAO layerIntersectDao, String batchDir) {
         if (thread == null) {
-            layerIntersectDao = layerIntersectDao;
             waitingBatchDirs = new LinkedBlockingQueue<String>();
-            thread = new BatchConsumerThread(waitingBatchDirs, layerIntersectDao);
+            thread = new BatchConsumerThread(waitingBatchDirs, layerIntersectDao, batchDir);
             thread.start();
         }
     }
@@ -57,38 +51,32 @@ public class BatchConsumer {
 class BatchConsumerThread extends Thread {
     LinkedBlockingQueue<String> waitingBatchDirs;
     LayerIntersectDAO layerIntersectDao;
+    String batchDir;
 
-    public BatchConsumerThread(LinkedBlockingQueue<String> waitingBatchDirs, LayerIntersectDAO layerIntersectDao) {
+    public BatchConsumerThread(LinkedBlockingQueue<String> waitingBatchDirs, LayerIntersectDAO layerIntersectDao
+        , String batchDir) {
         this.waitingBatchDirs = waitingBatchDirs;
         this.layerIntersectDao = layerIntersectDao;
+        this.batchDir = batchDir;
     }
 
     @Override
     public void run() {
+        //get jobs that may have been interrupted
+        File f = new File(batchDir);
+        File [] files = f.listFiles();
+        java.util.Arrays.sort(files);
+        for(int i=0;i<files.length;i++) {
+            if(files[i].isDirectory()
+                    && !(new File(files[i].getPath() + File.separator + "error.txt")).exists()
+                    && !(new File(files[i].getPath() + File.separator + "done.txt")).exists()) {
+                waitingBatchDirs.add(files[i].getPath() + File.separator);
+            }
+        }
+
         while (true) {
             String currentBatch = null;
             try {
-//                //get next batch to process
-//                File f = new File(batchDir);
-//                File [] files = f.listFiles();
-//                java.util.Arrays.sort(files);
-//
-//                File nextFile = null;
-//                for(int i=0;i<files.length;i++) {
-//                    if(files[i].isDirectory()
-//                            && !(new File(files[i].getPath() + File.separator + "error.txt")).exists()
-//                            && !(new File(files[i].getPath() + File.separator + "done.txt")).exists()) {
-//                        nextFile = files[i];
-//                        break;
-//                    }
-//                }
-//
-//                if(nextFile == null) {
-//                    //wait 10s
-//                    this.wait(10000);
-//                    continue;
-//                }
-
                 currentBatch = waitingBatchDirs.take();
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm:ss:SSS");
@@ -100,11 +88,6 @@ class BatchConsumerThread extends Thread {
 
                 ArrayList<String> sample = layerIntersectDao.sampling(fids, points);
 
-//                FileOutputStream fos = new FileOutputStream(currentBatch + "sample.csv.gz");
-//                GZIPOutputStream gzip = new GZIPOutputStream(fos);
-//                IntersectUtil.writeSampleToStream(fids.split(","), points.split(","), sample, gzip);
-//                gzip.close();
-//                fos.close();
                 FileOutputStream fos = new FileOutputStream(currentBatch + "sample.zip");
                 ZipOutputStream zip = new ZipOutputStream(fos);
                 zip.putNextEntry(new ZipEntry("sample.csv"));
@@ -116,6 +99,9 @@ class BatchConsumerThread extends Thread {
                 writeToFile(currentBatch + "finished.txt", sdf.format(new Date()), true);
 
                 currentBatch = null;
+            } catch (InterruptedException e) {
+                //thread stop request
+                break;
             } catch (Exception e) {
                 if (currentBatch != null) {
                     try {

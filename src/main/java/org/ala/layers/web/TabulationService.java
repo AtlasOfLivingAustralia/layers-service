@@ -16,6 +16,7 @@ package org.ala.layers.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +52,8 @@ public class TabulationService {
      *          /tabulation/species/rows/{fid1}/{fid2}/{type}
      *          /tabulation/species/columns/{fid1}/{fid2}/{type}
      *          /tabulation/species/total/{fid1}/{fid2}/{type}
+     *          /tabulation/{fid}/{pid}
+     *          /tabulation/{fid}?wkt=
      */
 
     /*
@@ -852,5 +855,19 @@ public class TabulationService {
                                                HttpServletRequest req, HttpServletResponse resp) throws IOException {
         List<Tabulation> tabulations = tabulationDao.getTabulationSingle(fid1, wkt);
         generateTabulationCSVHTML(tabulations, resp, func1, fid1, null, wkt, type);
+    }
+
+    @RequestMapping(value = "/tabulation/{fid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public List displayTabulationSingleWkt(@PathVariable("fid") String fid,
+                                               @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
+                                               HttpServletRequest req) throws IOException {
+        return tabulationDao.getTabulationSingle(fid, wkt);
+    }
+
+    @RequestMapping(value = "/tabulation/{fid}/{pid}", method = {RequestMethod.GET, RequestMethod.POST})
+    public List displayTabulationSinglePid(@PathVariable("fid") String fid,
+                                           @PathVariable("pid") String pid,
+                                        HttpServletRequest req) throws IOException {
+        return tabulationDao.getTabulationSingle(fid, pid);
     }
 }

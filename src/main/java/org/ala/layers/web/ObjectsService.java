@@ -61,8 +61,11 @@ public class ObjectsService {
     @RequestMapping(value = "/objects/{id}", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Objects> fieldObjects(@PathVariable("id") String id, HttpServletRequest req) {
-        return objectDao.getObjectsById(id);
+    List<Objects> fieldObjects(@PathVariable("id") String id,
+                               @RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
+                               @RequestParam(value = "pageSize", required = false, defaultValue = "-1") Integer pageSize,
+                               HttpServletRequest req) {
+        return objectDao.getObjectsById(id, start, pageSize);
     }
 
     /**
