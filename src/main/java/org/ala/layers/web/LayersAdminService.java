@@ -16,25 +16,22 @@
 package org.ala.layers.web;
 
 import au.com.bytecode.opencsv.CSVWriter;
-
-import java.security.Principal;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.ala.layers.dao.LayerDAO;
 import org.ala.layers.dto.Layer;
 import org.apache.log4j.Logger;
-import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * @author ajay

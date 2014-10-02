@@ -14,6 +14,8 @@
  ***************************************************************************/
 package org.ala.layers.util;
 
+import org.ala.layers.dao.LayerIntersectDAO;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,8 +23,6 @@ import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import org.ala.layers.dao.LayerIntersectDAO;
 
 /**
  * @author Adam
@@ -54,27 +54,47 @@ class BatchConsumerThread extends Thread {
     String batchDir;
 
     public BatchConsumerThread(LinkedBlockingQueue<String> waitingBatchDirs, LayerIntersectDAO layerIntersectDao
-        , String batchDir) {
+            , String batchDir) {
         this.waitingBatchDirs = waitingBatchDirs;
         this.layerIntersectDao = layerIntersectDao;
         this.batchDir = batchDir;
+    }
+
+    private static void writeToFile(String filename, String string, boolean append) throws IOException {
+        FileWriter fw = new FileWriter(filename, append);
+        fw.write(string);
+        fw.close();
+    }
+
+    private static String readFile(String filename) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(filename));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (sb.length() > 0) {
+                sb.append("\n");
+            }
+            sb.append(line);
+        }
+        return sb.toString();
     }
 
     @Override
     public void run() {
         //get jobs that may have been interrupted
         File f = new File(batchDir);
-        File [] files = f.listFiles();
+        File[] files = f.listFiles();
         java.util.Arrays.sort(files);
-        for(int i=0;i<files.length;i++) {
-            if(files[i].isDirectory()
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()
                     && !(new File(files[i].getPath() + File.separator + "error.txt")).exists()
-                    && !(new File(files[i].getPath() + File.separator + "done.txt")).exists()) {
+                    && !(new File(files[i].getPath() + File.separator + "finished.txt")).exists()) {
                 waitingBatchDirs.add(files[i].getPath() + File.separator);
             }
         }
 
-        while (true) {
+        boolean repeat = true;
+        while (repeat) {
             String currentBatch = null;
             try {
                 currentBatch = waitingBatchDirs.take();
@@ -98,9 +118,9 @@ class BatchConsumerThread extends Thread {
                 writeToFile(currentBatch + "status.txt", "finished at " + sdf.format(new Date()), true);
                 writeToFile(currentBatch + "finished.txt", sdf.format(new Date()), true);
 
-                currentBatch = null;
             } catch (InterruptedException e) {
                 //thread stop request
+                repeat = false;
                 break;
             } catch (Exception e) {
                 if (currentBatch != null) {
@@ -113,25 +133,8 @@ class BatchConsumerThread extends Thread {
                 }
                 e.printStackTrace();
             }
-        }
-    }
 
-    private static void writeToFile(String filename, String string, boolean append) throws IOException {
-        FileWriter fw = new FileWriter(filename, append);
-        fw.write(string);
-        fw.close();
-    }
-
-    private static String readFile(String filename) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(filename));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (sb.length() > 0) {
-                sb.append("\n");
-            }
-            sb.append(line);
+            currentBatch = null;
         }
-        return sb.toString();
     }
 }

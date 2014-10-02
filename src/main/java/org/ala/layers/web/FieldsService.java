@@ -14,10 +14,6 @@
  ***************************************************************************/
 package org.ala.layers.web;
 
-import java.util.List;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.ala.layers.dao.FieldDAO;
 import org.ala.layers.dao.ObjectDAO;
 import org.ala.layers.dto.Field;
@@ -25,6 +21,10 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author Adam

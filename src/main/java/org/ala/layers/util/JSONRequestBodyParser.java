@@ -1,11 +1,11 @@
 package org.ala.layers.util;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Utility class for parsing JSON maps provided to webservice handling methods.

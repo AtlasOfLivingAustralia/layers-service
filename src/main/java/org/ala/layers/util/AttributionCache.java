@@ -14,12 +14,17 @@ import java.util.Map;
  */
 public class AttributionCache {
 
+    private static AttributionCache attributionCache;
+    private Map<String, AttributionDTO> cache = new HashMap<String, AttributionDTO>();
+
     private AttributionCache() {
     }
 
-    private static AttributionCache attributionCache;
-
-    private Map<String, AttributionDTO> cache = new HashMap<String, AttributionDTO>();
+    public static AttributionCache getCache() {
+        if (attributionCache == null)
+            attributionCache = new AttributionCache();
+        return attributionCache;
+    }
 
     public AttributionDTO getAttributionFor(String dataResourceUid) throws Exception {
         AttributionDTO a = cache.get(dataResourceUid);
@@ -30,12 +35,6 @@ public class AttributionCache {
             cache.put(dataResourceUid, a);
         }
         return a;
-    }
-
-    public static AttributionCache getCache() {
-        if (attributionCache == null)
-            attributionCache = new AttributionCache();
-        return attributionCache;
     }
 
     public void clear() {

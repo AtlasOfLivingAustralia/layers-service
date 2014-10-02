@@ -11,13 +11,12 @@ import org.apache.log4j.Logger;
  */
 public class SpatialUtils {
 
-    private static Logger logger = Logger.getLogger(SpatialUtils.class);
-
     static int map_zoom = 21;
     static int map_offset = 268435456; // half the Earth's circumference at zoom level 21
     static double map_radius = map_offset / Math.PI;
     static double meters_per_pixel = 78271.5170; //at zoom level 1
     static int current_zoom = 0;
+    private static Logger logger = Logger.getLogger(SpatialUtils.class);
 
     static public int convertLngToPixel(double lng) {
         return (int) Math.round(map_offset + map_radius * lng * Math.PI / 180);

@@ -9,10 +9,8 @@ import org.ala.layers.legend.QueryField;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Resource;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -20,19 +18,15 @@ import java.util.Map.Entry;
  */
 public class RecordsLookup {
 
-    private static Logger logger = Logger.getLogger(RecordsLookup.class);
-
-
     static final int MAX_SIZE = 500;
     final static String TEMP_FILE_PATH = System.getProperty("java.io.tmpdir");
-
-    @Resource(name = "userDataDao")
-    private static UserDataDAO userDataDao;
-
     /**
      * store for ID and {last access time (Long) , cluster (Vector) }
      */
     static HashMap<String, Object[]> selections = new HashMap<String, Object[]>();
+    private static Logger logger = Logger.getLogger(RecordsLookup.class);
+    @Resource(name = "userDataDao")
+    private static UserDataDAO userDataDao;
 
     static void addData(String id, Object data) {
         Object[] o = selections.get(id);
@@ -128,16 +122,16 @@ public class RecordsLookup {
         output[4] = new double[]{minX, minY, maxX, maxY};
 
         //need mapping between facet points and header_id index because facets use datasets from header_id
-        int [] idx = new int[points.length/2];
+        int[] idx = new int[points.length / 2];
         if (facet_id.isEmpty()) {
-            for(int i=0;i<idx.length;i++) {
+            for (int i = 0; i < idx.length; i++) {
                 idx[i] = i;
             }
         } else {
             //number of existing_valid=true values should equal points.length
             int pos = 0;
             boolean[] existing_valid = userDataDao.getBooleanArray(header_id, facet_id);
-            for(int i=0;i<existing_valid.length;i++) {
+            for (int i = 0; i < existing_valid.length; i++) {
                 if (existing_valid[i]) {
                     idx[pos] = i;
                     pos++;

@@ -15,10 +15,7 @@
 package org.ala.layers.web;
 
 import au.com.bytecode.opencsv.CSVReader;
-import org.ala.layers.dao.DistributionDAO;
-import org.ala.layers.dao.FieldDAO;
 import org.ala.layers.dao.UserDataDAO;
-import org.ala.layers.dto.Distribution;
 import org.ala.layers.dto.Ud_header;
 import org.ala.layers.legend.Facet;
 import org.ala.layers.legend.Legend;
@@ -26,14 +23,12 @@ import org.ala.layers.legend.LegendObject;
 import org.ala.layers.legend.QueryField;
 import org.ala.layers.userdata.RecordsLookup;
 import org.ala.layers.util.SpatialUtils;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -44,9 +39,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -56,24 +52,23 @@ import java.util.zip.ZipOutputStream;
 @Controller
 public class UserDataService {
 
+    final static int HIGHLIGHT_RADIUS = 3;
+    //256x256 transparent image
+    static Object blankImageObject = new Object();
+    static byte[] blankImageBytes = null;
     private final String WS_USERDATA_ADD = "/userdata/add";
     private final String WS_USERDATA_FACET = "/userdata/facet";
     private final String WS_USERDATA_LIST = "/userdata/list";
     private final String WS_USERDATA_GET = "/userdata/get";
     private final String WS_USERDATA_GETQF = "/userdata/getqf";
     private final String WS_USERDATA_SAMPLE = "/userdata/sample";
-
     private final String WS_USERDATA_WMS = "/userdata/wms/reflect";
-
-    final static int HIGHLIGHT_RADIUS = 3;
-
-    @Resource(name = "userDataDao")
-    private UserDataDAO userDataDao;
-
     /**
      * Log4j instance
      */
     protected Logger logger = Logger.getLogger(this.getClass());
+    @Resource(name = "userDataDao")
+    private UserDataDAO userDataDao;
 
     @RequestMapping(value = WS_USERDATA_ADD, method = {RequestMethod.POST, RequestMethod.GET})
     public
@@ -94,6 +89,21 @@ public class UserDataService {
 
         return null;
     }
+
+
+    /*
+    http://spatial.ala.org.au/geoserver/wms/reflect?styles=&format=image/png&
+    layers=ALA:occurrences&transparent=true&
+    CQL_FILTER=speciesconceptid='urn:lsid:biodiversity.org.au:afd.taxon:cd149740-87b2-4da2-96dc-e1aa1f693438'&SRS=EPSG%3A900913&
+    ENV=color%3A1dd183%3Bname%3Acircle%3Bsize%3A8%3Bopacity%3A0.8&
+    VERSION=1.1.0&
+    SERVICE=WMS&REQUEST=GetMap&
+    EXCEPTIONS=application%2Fvnd.ogc.se_inimage&
+    BBOX=15654303.7292,-1408886.9659,15810846.7631,-1252343.932&
+    WIDTH=256&
+    HEIGHT=256
+     *
+     */
 
     boolean importCSV(String name, String ud_header_id, String csv) {
         try {
@@ -296,21 +306,6 @@ public class UserDataService {
         return record;
     }
 
-
-    /*
-    http://spatial.ala.org.au/geoserver/wms/reflect?styles=&format=image/png&
-    layers=ALA:occurrences&transparent=true&
-    CQL_FILTER=speciesconceptid='urn:lsid:biodiversity.org.au:afd.taxon:cd149740-87b2-4da2-96dc-e1aa1f693438'&SRS=EPSG%3A900913&
-    ENV=color%3A1dd183%3Bname%3Acircle%3Bsize%3A8%3Bopacity%3A0.8&
-    VERSION=1.1.0&
-    SERVICE=WMS&REQUEST=GetMap&
-    EXCEPTIONS=application%2Fvnd.ogc.se_inimage&
-    BBOX=15654303.7292,-1408886.9659,15810846.7631,-1252343.932&
-    WIDTH=256&
-    HEIGHT=256
-     *
-     */
-
     @RequestMapping(value = WS_USERDATA_WMS, method = RequestMethod.GET)
     public void getPointsMap(
             @RequestParam(value = "CQL_FILTER", required = false, defaultValue = "") String cql_filter,
@@ -444,7 +439,7 @@ public class UserDataService {
                 listHighlight = new ArrayList<QueryField>();
             }
 
-            int [] idx = null;
+            int[] idx = null;
             if (lsid != null) {
                 Object[] data = (Object[]) RecordsLookup.getData(lsid);
                 points = (double[]) data[1];
@@ -565,7 +560,7 @@ public class UserDataService {
                             if (points[i] >= bb[0][0] && points[i] <= bb[1][0]
                                     && points[i + 1] >= bb[0][1] && points[i + 1] <= bb[1][1]) {
                                 //colours is made the correct length, see above
-                                int thisColour = colours.getColour(i/2);
+                                int thisColour = colours.getColour(i / 2);
                                 if (thisColour != prevColour) {
                                     g.setColor(new Color(thisColour));
                                     prevColour = thisColour;
@@ -614,10 +609,6 @@ public class UserDataService {
 
         //logger.debug("[wms tile: " + (System.currentTimeMillis() - start) + "ms]");
     }
-
-    //256x256 transparent image
-    static Object blankImageObject = new Object();
-    static byte[] blankImageBytes = null;
 
     private void setImageBlank(HttpServletResponse response) {
         if (blankImageBytes == null && blankImageObject != null) {
@@ -728,7 +719,7 @@ public class UserDataService {
             // Complete the ZIP file
             out.close();
         } catch (Exception e) {
-            logger.error("failed to zip sampling",e);
+            logger.error("failed to zip sampling", e);
         }
 
     }

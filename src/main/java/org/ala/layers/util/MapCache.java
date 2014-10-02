@@ -8,6 +8,13 @@ import java.net.URL;
 public class MapCache {
 
     private static MapCache singleton;
+    String mapCachePath = "/data/layers-service/mapCache/";
+    String baseUrl = "http://spatial.ala.org.au/geoserver/ALA/wms?service=WMS" +
+            "&version=1.1.0&request=GetMap" +
+            "&sld=http://fish.ala.org.au/data/dist.sld" +
+            "&layers=ALA:aus1,ALA:Distributions&styles=" +
+            "&bbox=109,-47,157,-7&srs=EPSG:4326" +
+            "&format=image/png&width=400&height=400&viewparams=s:";
 
     private MapCache() {
     }
@@ -18,15 +25,6 @@ public class MapCache {
         }
         return singleton;
     }
-
-    String mapCachePath = "/data/layers-service/mapCache/";
-
-    String baseUrl = "http://spatial.ala.org.au/geoserver/ALA/wms?service=WMS" +
-            "&version=1.1.0&request=GetMap" +
-            "&sld=http://fish.ala.org.au/data/dist.sld" +
-            "&layers=ALA:aus1,ALA:Distributions&styles=" +
-            "&bbox=109,-47,157,-7&srs=EPSG:4326" +
-            "&format=image/png&width=400&height=400&viewparams=s:";
 
     public InputStream getCachedMap(String geomIdx) throws Exception {
         File map = new File(mapCachePath + geomIdx);

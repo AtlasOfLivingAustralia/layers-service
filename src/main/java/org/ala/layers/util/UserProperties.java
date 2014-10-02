@@ -1,8 +1,6 @@
 package org.ala.layers.util;
 
-import org.ala.layers.client.Client;
 import org.ala.layers.intersect.IntersectConfig;
-import org.ala.layers.web.IntersectService;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -10,10 +8,8 @@ import java.util.Properties;
 
 public class UserProperties {
 
-    protected Logger logger = Logger.getLogger(this.getClass());
-
     private final String USER_PROPERTIES = "/data/layers-service/config/layers-service-config.properties";
-
+    protected Logger logger = Logger.getLogger(this.getClass());
     private Properties userProperties = null;
 
     /**

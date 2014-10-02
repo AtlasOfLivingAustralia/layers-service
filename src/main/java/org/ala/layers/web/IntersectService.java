@@ -14,39 +14,26 @@
  ***************************************************************************/
 package org.ala.layers.web;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.*;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.ala.layers.dao.FieldDAO;
 import org.ala.layers.dao.LayerDAO;
 import org.ala.layers.dao.LayerIntersectDAO;
 import org.ala.layers.dao.ObjectDAO;
-import org.ala.layers.dto.Layer;
 import org.ala.layers.dto.Objects;
-import org.ala.layers.intersect.Grid;
-import org.ala.layers.intersect.IntersectConfig;
 import org.ala.layers.util.BatchConsumer;
 import org.ala.layers.util.BatchProducer;
-import org.ala.layers.util.IntersectUtil;
 import org.ala.layers.util.SpatialConversionUtils;
 import org.ala.layers.util.UserProperties;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.*;
 
 /**
  * @author ajay
@@ -108,7 +95,7 @@ public class IntersectService {
     @RequestMapping(value = WS_INTERSECT_BATCH, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Map batch(@RequestParam(value = "fids", required = false, defaultValue = "") String fids,
-                      @RequestParam(value = "points", required = false, defaultValue = "") String pointsString,
+                     @RequestParam(value = "points", required = false, defaultValue = "") String pointsString,
                      HttpServletRequest request, HttpServletResponse response) {
 
         BatchConsumer.start(layerIntersectDao, userProperties.getProperty("batch_path"));
