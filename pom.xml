@@ -10,7 +10,9 @@
 	<url>http://www.ala.org.au</url>
 
     <scm>
-        <developerConnection>scm:svn:https://alageospatialportal.googlecode.com/svn/trunk/layers-service/</developerConnection>
+        <connection>scm:git:git://github.com/AtlasOfLivingAustralia/layers-service.git</connection>
+        <developerConnection>scm:git:git@github.com:AtlasOfLivingAustralia/layers-service.git</developerConnection>
+        <url>https://github.com/AtlasOfLivingAustralia/layers-service</url>
     </scm>
 
     <distributionManagement>
