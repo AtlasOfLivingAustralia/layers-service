@@ -83,7 +83,7 @@ public class DistributionsService {
                                             HttpServletResponse response) {
 
         if (StringUtils.isEmpty(wkt) && fid != null && objectName != null) {
-            List<Objects> objects = objectDao.getObjectByFidAndName(fid, objectName);
+            List<org.ala.layers.dto.Objects> objects = objectDao.getObjectByFidAndName(fid, objectName);
             // TODO this might be better served with a stored proc
             // so that the polygon isnt passed from DB to java
             wkt = objects.get(0).getGeometry();
@@ -133,7 +133,7 @@ public class DistributionsService {
                                            HttpServletResponse response) {
 
         if (StringUtils.isEmpty(wkt) && fid != null && objectName != null) {
-            List<Objects> objects = objectDao.getObjectByFidAndName(fid, objectName);
+            List<org.ala.layers.dto.Objects> objects = objectDao.getObjectByFidAndName(fid, objectName);
             // TODO this might be better served with a stored proc
             // so that the polygon isn't passed from DB to java
             wkt = objects.get(0).getGeometry();
