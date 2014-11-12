@@ -1,16 +1,24 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib uri="/tld/ala.tld" prefix="ala" %>
 <%@include file="../common/top.jsp" %>
 <header id="page-header">
     <div class="inner">
-        <nav id="breadcrumb"><ol><li><a href="http://www.ala.org.au">Home</a></li> <li><a href="/">Mapping &#038; analysis</a></li> <li class="last">Spatial Layers</li></ol></nav>
+        <nav id="breadcrumb">
+            <ol>
+                <li><a href="http://www.ala.org.au">Home</a></li>
+                <li><a href="/">Mapping &#038; analysis</a></li>
+                <li class="last">Spatial Layers</li>
+            </ol>
+        </nav>
         <section id="content-search">
             <h1>Spatial layers</h1>
+
             <p>Following are a list of ALA Spatial web services.</p>
         </section>
-    </div><!--inner-->
+    </div>
+    <!--inner-->
 
 </header>
 <div class="inner">
@@ -91,8 +99,10 @@
             </span>
             <span class="alignright">
                 <!--<a class="button caution" href="javascript:reset()" title="Remove all filters and sorting options">Reset list</a>-->
-                <a href="#" id="downloadCSVLink" class="button" title="Download metadata for datasets as a CSV file">Download as CSV</a>
-                <a href="#" id="downloadJSONLink" class="button" title="Download metadata for datasets as a JSON file">Download as JSON</a>
+                <a href="#" id="downloadCSVLink" class="button" title="Download metadata for datasets as a CSV file">Download
+                    as CSV</a>
+                <a href="#" id="downloadJSONLink" class="button" title="Download metadata for datasets as a JSON file">Download
+                    as JSON</a>
 
             </span>
         </section>
@@ -102,59 +112,62 @@
                 <c:when test="${fn:length(layers) > 0}">
                     <table id="layerstable" class="table-borders" style="width:100%">
                         <thead>
-                            <tr>
-                                <th>Classification 1</th>
-                                <th>Classification 2</th>
-                                <th>Display name</th>
-                                <th>Short name</th>
-                                <th>Description</th>
-                                <th>Type</th>
-                                <th>Metadata contact organization</th>
-                                <th>Keywords</th>
-                                <th>Preview</th>
-                                <!-- <th>Reference date</th> -->
-                                <!--<th>Actions</th>-->
-                            </tr>
+                        <tr>
+                            <th>Classification 1</th>
+                            <th>Classification 2</th>
+                            <th>Display name</th>
+                            <th>Short name</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Metadata contact organization</th>
+                            <th>Keywords</th>
+                            <th>Preview</th>
+                            <!-- <th>Reference date</th> -->
+                            <!--<th>Actions</th>-->
+                        </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${layers}" var="layer" varStatus="status">
-                                <tr>
-                                    <td>${layer.classification1}</td>
-                                    <td>${layer.classification2}</td>
-                                    <td><a href="/layers/more/${layer.name}">${layer.displayname}</a></td>
-                                    <td style="max-width:80px" class="wrapword">${layer.name}</td>
-                                    <td>${layer.description}</td>
-                                    <c:choose>
-                                        <c:when test="${layer.type eq 'Environmental'}">
-                                            <td>Environmental (gridded) ${layer.scale}</td>
-                                        </c:when>
-                                        <c:when test="${layer.type eq 'Contextual'}">
-                                            <td>Contextual (polygonal) ${layer.scale}</td>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <td>${layer.type} ${layer.scale}</td>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <td>${layer.source}</td>
-                                    <td>${layer.keywords}</td>
-                                    <td>
-                                        <img src="/output/layerthumbs/ALA:${layer.name}.jpg" width="200px" />
-                                        <br/>
-                                        <a href="http://spatial.ala.org.au/?layers=${layer.name}">Click to view this layer</a>
-                                    </td>
-                                    <!-- <td>${layer.citation_date}</td> -->
-                                    <!--
+                        <c:forEach items="${layers}" var="layer" varStatus="status">
+                            <tr>
+                                <td>${layer.classification1}</td>
+                                <td>${layer.classification2}</td>
+                                <td><a href="/layers/more/${layer.name}">${layer.displayname}</a></td>
+                                <td style="max-width:80px" class="wrapword">${layer.name}</td>
+                                <td>${layer.description}</td>
+                                <c:choose>
+                                    <c:when test="${layer.type eq 'Environmental'}">
+                                        <td>Environmental (gridded) ${layer.scale}</td>
+                                    </c:when>
+                                    <c:when test="${layer.type eq 'Contextual'}">
+                                        <td>Contextual (polygonal) ${layer.scale}</td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td>${layer.type} ${layer.scale}</td>
+                                    </c:otherwise>
+                                </c:choose>
+                                <td>${layer.source}</td>
+                                <td>${layer.keywords}</td>
+                                <td>
+                                    <img src="/output/layerthumbs/ALA:${layer.name}.jpg" width="200px"/>
+                                    <br/>
+                                    <a href="http://spatial.ala.org.au/?layers=${layer.name}">Click to view this
+                                        layer</a>
+                                </td>
+                                <!-- <td>${layer.citation_date}</td> -->
+                                <!--
                                     <td>
                                         <a href="layers/edit/${layer.id}">edit</a>
                                     </td>
                                     -->
-                                </tr>
-                            </c:forEach>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </c:when>
                 <c:otherwise>
-                    <ul><li>No layers available</li></ul>
+                    <ul>
+                        <li>No layers available</li>
+                    </ul>
                 </c:otherwise>
             </c:choose>
         </section>
@@ -178,33 +191,39 @@
             </ol>
         </nav>
         -->
-    </div><!--col-wide-->
+    </div>
+    <!--col-wide-->
 
-</div><!--inner-->
+</div>
+<!--inner-->
 
 
-<script type="text/javascript" src="/actions/static/scripts/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../includes/scripts/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
 
-    $(document).ready(function() {
-
+    $(document).ready(function () {
         // setup the table
-        $('#layerstable').dataTable( {
-            "aaSorting": [[ 2, "asc" ]],
-            "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]], 
+        $('#layerstable').dataTable({
+            "aaSorting": [
+                [ 2, "asc" ]
+            ],
+            "aLengthMenu": [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "All"]
+            ],
             "sPaginationType": "full_numbers",
             "sDom": '<"sort-options"fl<"clear">>rt<"pagination"ip<"clear">>',
             "oLanguage": {
                 "sSearch": ""
             }
-        } );
+        });
 
         $("div.dataTables_filter input").attr("placeholder", "Filter within results");
 
-        $('#downloadCSVLink').click(function() {
+        $('#downloadCSVLink').click(function () {
             downloadLayers("csv");
         });
-        $('#downloadJSONLink').click(function() {
+        $('#downloadJSONLink').click(function () {
             downloadLayers("json");
         });
     });
@@ -218,13 +237,11 @@
             downloadurl += ".csv";
         }
         if (query != "") {
-            downloadurl += "?q="+query;
+            downloadurl += "?q=" + query;
         }
-        location.href = downloadurl; 
+        location.href = downloadurl;
     }
 </script>
-
-
 
 
 <%@include file="../common/bottom.jsp" %>

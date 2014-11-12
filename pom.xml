@@ -51,11 +51,11 @@
 
 		<!-- ALA Spatial layers-store -->
 		<dependency>
-			<groupId>org.ala.layers</groupId>
-			<artifactId>layers-store</artifactId>
-			<version>1.1-SNAPSHOT</version>
-			<!--exclusions> <exclusion> <groupId>postgresql</groupId> <artifactId>postgresql</artifactId> 
-				</exclusion> </exclusions -->
+            <groupId>au.org.ala</groupId>
+            <artifactId>layers-store</artifactId>
+            <version>1.2-SNAPSHOT</version>
+            <!--exclusions> <exclusion> <groupId>postgresql</groupId> <artifactId>postgresql</artifactId>
+                </exclusion> </exclusions -->
 		</dependency>
 		<!-- <dependency> <groupId>au.org.ala.spatial</groupId> <artifactId>utilities</artifactId> 
 			<version>1.0-SNAPSHOT</version> </dependency> -->
