@@ -33,19 +33,19 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
             <tr>
                 <!-- area -->
                 <th>Area</th>
-                <th>Total %</th>
+                <!--th>Total %</th>
                 <th>Row %</th>
-                <th>Column %</th>
+                <th>Column %</th-->
                 <!-- species -->
                 <th>Species</th>
-                <th>Total %</th>
+                <!--th>Total %</th>
                 <th>Row %</th>
-                <th>Column %</th>
+                <th>Column %</th-->
                 <!-- occurrences -->
                 <th>Occurrences</th>
-                <th>Total %</th>
+                <!--th>Total %</th>
                 <th>Row %</th>
-                <th>Column %</th>
+                <th>Column %</th-->
             </tr>
             </thead>
             <tbody>
@@ -59,7 +59,7 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                     <a href='tabulation/area/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/area/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
                 </td>
-                <td>
+                <!--td>
                     <a href='tabulation/area/total/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/area/total/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/area/total/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
@@ -73,14 +73,14 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                     <a href='tabulation/area/column/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/area/column/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/area/column/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
-                </td>
+                </td-->
                 <!-- species -->
                 <td>
                     <a href='tabulation/species/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/species/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/species/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
                 </td>
-                <td>
+                <!--td>
                     <a href='tabulation/species/total/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/species/total/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/species/total/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
@@ -94,14 +94,14 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                     <a href='tabulation/species/column/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/species/column/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/species/column/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
-                </td>
+                </td-->
                 <!-- occurrences -->
                 <td>
                     <a href='tabulation/occurrences/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/occurrences/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/occurrences/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
                 </td>
-                <td>
+                <!--td>
                     <a href='tabulation/occurrences/total/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/occurrences/total/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/occurrences/total/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
@@ -115,7 +115,7 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                     <a href='tabulation/occurrences/column/${layer.fid1}/${layer.fid2}/tabulation.html'>html</a>
                     <a href='tabulation/occurrences/column/${layer.fid1}/${layer.fid2}/tabulation.csv'>csv</a>
                     <a href='tabulation/occurrences/column/${layer.fid1}/${layer.fid2}/tabulation.json'>json</a>
-                </td>
+                </td-->
             </tr>
         </c:forEach>
             </tbody>

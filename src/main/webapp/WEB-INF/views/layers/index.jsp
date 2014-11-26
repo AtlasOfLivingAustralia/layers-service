@@ -220,12 +220,14 @@
 
         $("div.dataTables_filter input").attr("placeholder", "Filter within results");
 
-        $('#downloadCSVLink').click(function () {
-            downloadLayers("csv");
-        });
-        $('#downloadJSONLink').click(function () {
-            downloadLayers("json");
-        });
+
+    });
+
+    $('#downloadCSVLink').click(function () {
+        downloadLayers("csv");
+    });
+    $('#downloadJSONLink').click(function () {
+        downloadLayers("json");
     });
 
     function downloadLayers(type) {
