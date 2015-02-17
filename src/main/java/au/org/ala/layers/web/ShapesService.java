@@ -488,6 +488,10 @@ public class ShapesService {
     }
 
     private boolean checkAPIKey(String apiKey, String userId) {
+        if (IntersectConfig.getApiKeyCheckUrlTemplate() == null || IntersectConfig.getApiKeyCheckUrlTemplate().isEmpty()) {
+            return true;
+        }
+
         try {
             HttpClient httpClient = new HttpClient();
             GetMethod get = new GetMethod(MessageFormat.format(IntersectConfig.getApiKeyCheckUrlTemplate(), apiKey));
