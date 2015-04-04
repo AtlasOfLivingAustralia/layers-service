@@ -207,7 +207,7 @@ public class DistributionsService {
     public
     @ResponseBody
     Distribution getDistribution(@PathVariable String lsid, HttpServletResponse response) throws Exception {
-        List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid});
+        List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION);
         if (distributions != null && !distributions.isEmpty()) {
             return distributions.get(0);
         } else {
@@ -224,7 +224,7 @@ public class DistributionsService {
     @ResponseBody
     MapDTO getDistributionOverviewMap(@PathVariable String lsid, @RequestParam(value = "height", required = false, defaultValue = "504") Integer height,
                                       @RequestParam(value = "width", required = false, defaultValue = "512") Integer width, HttpServletResponse response) throws Exception {
-        Distribution distribution = distributionDao.findDistributionByLSIDOrName(lsid);
+        Distribution distribution = distributionDao.findDistributionByLSIDOrName(lsid, Distribution.EXPERT_DISTRIBUTION);
         if (distribution != null) {
             MapDTO m = new MapDTO();
             m.setDataResourceUID(distribution.getData_resource_uid());
@@ -315,7 +315,7 @@ public class DistributionsService {
         try {
             Map<String, Map<String, Double>> pointsMap = (Map<String, Map<String, Double>>) parser.parse(pointsJson);
             try {
-                Map<String, Double> outlierDistances = distributionDao.identifyOutlierPointsForDistribution(lsid, pointsMap);
+                Map<String, Double> outlierDistances = distributionDao.identifyOutlierPointsForDistribution(lsid, pointsMap, Distribution.EXPERT_DISTRIBUTION);
                 return outlierDistances;
             } catch (IllegalArgumentException ex) {
                 response.sendError(400, "No expert distribution for species associated with supplied lsid");
