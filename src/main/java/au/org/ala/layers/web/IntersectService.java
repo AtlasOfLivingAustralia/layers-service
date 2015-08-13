@@ -23,6 +23,7 @@ import au.org.ala.layers.util.BatchConsumer;
 import au.org.ala.layers.util.BatchProducer;
 import au.org.ala.layers.util.SpatialConversionUtils;
 import au.org.ala.layers.util.UserProperties;
+import com.googlecode.ehcache.annotations.TriggersRemove;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -233,6 +234,7 @@ public class IntersectService {
         return;
     }
 
+    @TriggersRemove(cacheName = {"layers", "fields"}, removeAll = true)
     @RequestMapping(value = WS_INTERSECT_RELOAD_CONFIG, method = RequestMethod.GET)
     @ResponseBody
     public Map reloadConfig(@RequestParam(value = "p", required = false, defaultValue = "") String p, HttpServletRequest request) {

@@ -17,6 +17,7 @@ package au.org.ala.layers.web;
 
 import au.org.ala.layers.dao.LayerDAO;
 import au.org.ala.layers.dto.Layer;
+import com.googlecode.ehcache.annotations.Cacheable;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,11 +48,11 @@ public class LayersService {
      * @param req
      * @return
      */
+    @Cacheable(cacheName = "layers")
     @RequestMapping(value = "/layers", method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Layer> layerObjects(HttpServletRequest req) {
-        logger.info("Retriving enabled layers");
+    List<Layer> layerObjects() {
         return layerDao.getLayers();
     }
 

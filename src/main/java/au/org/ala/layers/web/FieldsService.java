@@ -17,6 +17,7 @@ package au.org.ala.layers.web;
 import au.org.ala.layers.dao.FieldDAO;
 import au.org.ala.layers.dao.ObjectDAO;
 import au.org.ala.layers.dto.Field;
+import com.googlecode.ehcache.annotations.Cacheable;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -49,14 +50,11 @@ public class FieldsService {
     /*
      * list fields table
      */
+    @Cacheable(cacheName = "fields")
     @RequestMapping(value = WS_FIELDS, method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Field> listFields(HttpServletRequest req) {
-
-//        String query = "SELECT * FROM fields WHERE enabled=TRUE;";
-//        ResultSet r = DBConnection.query(query);
-//        return Utils.resultSetToJSON(r);
+    List<Field> listFields() {
 
         return fieldDao.getFields();
     }
