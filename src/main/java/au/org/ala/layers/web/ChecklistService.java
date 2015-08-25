@@ -65,8 +65,8 @@ public class ChecklistService {
     public
     @ResponseBody
     Distribution getDistribution(@PathVariable Long spcode,
-                                 HttpServletRequest req) {
+                                 @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt) {
 
-        return distributionDao.getDistributionBySpcode(spcode, Distribution.SPECIES_CHECKLIST);
+        return distributionDao.getDistributionBySpcode(spcode, Distribution.SPECIES_CHECKLIST, noWkt);
     }
 }

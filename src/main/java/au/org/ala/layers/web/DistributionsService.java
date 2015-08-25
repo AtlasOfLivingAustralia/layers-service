@@ -196,8 +196,9 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_ID, method = RequestMethod.GET)
     public
     @ResponseBody
-    Distribution getDistribution(@PathVariable Long spcode) {
-        return distributionDao.getDistributionBySpcode(spcode, Distribution.EXPERT_DISTRIBUTION);
+    Distribution getDistribution(@PathVariable Long spcode,
+                                 @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt) {
+        return distributionDao.getDistributionBySpcode(spcode, Distribution.EXPERT_DISTRIBUTION, noWkt);
     }
 
     /*
@@ -206,8 +207,10 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_LSID, method = RequestMethod.GET)
     public
     @ResponseBody
-    Distribution getDistribution(@PathVariable String lsid, HttpServletResponse response) throws Exception {
-        List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION);
+    Distribution getDistribution(@PathVariable String lsid,
+                                 @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt,
+                                 HttpServletResponse response) throws Exception {
+        List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION, noWkt);
         if (distributions != null && !distributions.isEmpty()) {
             return distributions.get(0);
         } else {
