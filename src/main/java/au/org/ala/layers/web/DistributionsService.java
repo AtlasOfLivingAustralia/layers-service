@@ -55,6 +55,13 @@ public class DistributionsService {
     private final String WS_DISTRIBUTION_OUTLIERS = "/distribution/outliers/{lsid:.+}";
     private final String WS_ATTRIBUTION_CACHE = "/attribution/clearCache";
 
+    private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_LSID = "/distribution/map/lsid/{lsid:.+}";
+    private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_SPCODE = "/distribution/map/spcode/{spcode:.+}";
+    private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_NAME = "/distribution/map/name/{scientificName:.+}";
+    private final String WS_DISTRIBUTION_LSIDS = "/distribution/lsids/{lsid:.+}";
+    private final String WS_DISTRIBUTION_OVERVIEWMAPS = "/distribution/maps/{lsid:.+}";
+    
+
     /**
      * Log4j instance
      */
@@ -102,6 +109,8 @@ public class DistributionsService {
             }
         }
 
+        List<Distribution> list = null;
+                
         if (wkt.startsWith("GEOMETRYCOLLECTION")) {
             List<String> collectionParts = SpatialConversionUtils.getGeometryCollectionParts(wkt);
 
@@ -112,11 +121,15 @@ public class DistributionsService {
                         genera, generaLsids, Distribution.EXPERT_DISTRIBUTION, dataResourceUids, endemic));
             }
 
-            return new ArrayList<Distribution>(distributionsSet);
+            list = new ArrayList<Distribution>(distributionsSet);
         } else {
-            return distributionDao.queryDistributions(wkt, min_depth, max_depth, pelagic, coastal, estuarine, desmersal, groupName, geom_idx, lsids, families, familyLsids, genera, generaLsids,
+            list = distributionDao.queryDistributions(wkt, min_depth, max_depth, pelagic, coastal, estuarine, desmersal, groupName, geom_idx, lsids, families, familyLsids, genera, generaLsids,
                     Distribution.EXPERT_DISTRIBUTION, dataResourceUids, endemic);
         }
+
+        addImageUrls(list);
+
+        return list;
     }
 
     /*
@@ -169,8 +182,10 @@ public class DistributionsService {
                                                      @RequestParam(value = "familyLsid", required = false) String[] familyLsids, @RequestParam(value = "genus", required = false) String[] genera,
                                                      @RequestParam(value = "genusLsid", required = false) String[] generaLsids, @RequestParam(value = "dataResourceUid", required = false) String[] dataResourceUids,
                                                      @RequestParam(value = "endemic", required = false) Boolean endemic) {
-        return distributionDao.queryDistributionsByRadius(longitude, latitude, radius, min_depth, max_depth, pelagic, coastal, estuarine, desmersal, groupName, geom_idx, lsids, families, familyLsids,
+        List<Distribution> list = distributionDao.queryDistributionsByRadius(longitude, latitude, radius, min_depth, max_depth, pelagic, coastal, estuarine, desmersal, groupName, geom_idx, lsids, families, familyLsids,
                 genera, generaLsids, Distribution.EXPERT_DISTRIBUTION, dataResourceUids, endemic);
+        addImageUrls(list);
+        return list;
     }
 
     @RequestMapping(value = WS_DISTRIBUTIONS_RADIUS_COUNTS, method = {RequestMethod.GET, RequestMethod.POST})
@@ -198,7 +213,10 @@ public class DistributionsService {
     @ResponseBody
     Distribution getDistribution(@PathVariable Long spcode,
                                  @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt) {
-        return distributionDao.getDistributionBySpcode(spcode, Distribution.EXPERT_DISTRIBUTION, noWkt);
+        Distribution d = distributionDao.getDistributionBySpcode(spcode, Distribution.EXPERT_DISTRIBUTION, noWkt);
+        addImageUrl(d);
+
+        return d;
     }
 
     /*
@@ -212,7 +230,28 @@ public class DistributionsService {
                                  HttpServletResponse response) throws Exception {
         List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION, noWkt);
         if (distributions != null && !distributions.isEmpty()) {
-            return distributions.get(0);
+            Distribution d = distributions.get(0);
+            addImageUrl(d);
+            return d;
+        } else {
+            response.sendError(404);
+            return null;
+        }
+    }
+
+    /*
+     * get distribution by id
+     */
+    @RequestMapping(value = WS_DISTRIBUTION_LSIDS, method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Distribution> getDistributions(@PathVariable String lsid,
+                                        @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt,
+                                        HttpServletResponse response) throws Exception {
+        List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION, noWkt);
+        if (distributions != null && !distributions.isEmpty()) {
+            addImageUrls(distributions);
+            return distributions;
         } else {
             response.sendError(404);
             return null;
@@ -247,6 +286,40 @@ public class DistributionsService {
         }
     }
 
+    /*
+     * get distribution by id
+     */
+    @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAPS, method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<MapDTO> getDistributionOverviewMaps(@PathVariable String lsid, @RequestParam(value = "height", required = false, defaultValue = "504") Integer height,
+                                             @RequestParam(value = "width", required = false, defaultValue = "512") Integer width, HttpServletResponse response) throws Exception {
+        List<Distribution> distributions = distributionDao.findDistributionsByLSIDOrName(lsid, Distribution.EXPERT_DISTRIBUTION);
+        List<MapDTO> maps = new ArrayList<MapDTO>();
+        if (distributions != null && distributions.size() > 0) {
+            for (Distribution distribution : distributions) {
+                MapDTO m = new MapDTO();
+                m.setDataResourceUID(distribution.getData_resource_uid());
+                m.setUrl(userProperties.getProperty("layers_service_url") + "/distribution/map/png/" + distribution.getGeom_idx());
+                // set the attribution info
+                AttributionDTO dto = AttributionCache.getCache().getAttributionFor(distribution.getData_resource_uid());
+                m.setAvailable(true);
+                m.setDataResourceName(dto.getName());
+                m.setLicenseType(dto.getLicenseType());
+                m.setLicenseVersion(dto.getLicenseVersion());
+                m.setRights(dto.getRights());
+                m.setDataResourceUrl(dto.getWebsiteUrl());
+                m.setMetadataUrl(dto.getAlaPublicUrl());
+
+                maps.add(m);
+            }
+            return maps;
+        } else {
+            response.sendError(404);
+            return null;
+        }
+    }
+    
     /*
      * get distribution by id
      */
@@ -331,5 +404,81 @@ public class DistributionsService {
             response.sendError(400, "Invalid format for point information");
             return null;
         }
+    }
+
+    /*
+     * get distribution image
+     */
+    @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAP_PNG_LSID, method = RequestMethod.GET)
+    public void getDistributionOverviewMapPngLsid(@PathVariable String lsid, HttpServletResponse response) throws Exception {
+        getImage(response, lsid, null, null);
+    }
+
+    /*
+     * get distribution image
+     */
+    @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAP_PNG_SPCODE, method = RequestMethod.GET)
+    public void getDistributionOverviewMapPngSpcode(@PathVariable Long spcode, HttpServletResponse response) throws Exception {
+        getImage(response, null, spcode, null);
+    }
+
+    /*
+     * get distribution image
+     */
+    @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAP_PNG_NAME, method = RequestMethod.GET)
+    public void getDistributionOverviewMapPngName(@PathVariable String scientificName, HttpServletResponse response) throws Exception {
+        getImage(response, null, null, scientificName);
+    }
+
+    /**
+     * returns writes one image to the HttpServletResponse for lsid, spcode or scientificName match
+     * *
+     *
+     * @param response
+     * @param lsid
+     * @param spcode
+     * @param scientificName
+     * @throws Exception
+     */
+    private void getImage(HttpServletResponse response, String lsid, Long spcode, String scientificName) throws Exception {
+        Long geomIdx = null;
+
+        try {
+            if (spcode != null) {
+                geomIdx = distributionDao.getDistributionBySpcode(spcode, Distribution.EXPERT_DISTRIBUTION, true).getGeom_idx();
+            } else if (lsid != null) {
+                geomIdx = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION, true).get(0).getGeom_idx();
+            } else if (scientificName != null) {
+                geomIdx = distributionDao.findDistributionByLSIDOrName(scientificName, Distribution.EXPERT_DISTRIBUTION).getGeom_idx();
+            }
+        } catch (Exception e) {
+
+        }
+
+        if (geomIdx != null) {
+            InputStream input = MapCache.getMapCache().getCachedMap(String.valueOf(geomIdx));
+
+            OutputStream out = response.getOutputStream();
+            byte[] buff = new byte[1024];
+            int read;
+            while ((read = input.read(buff)) > 0) {
+                out.write(buff, 0, read);
+            }
+            out.flush();
+            out.close();
+            input.close();
+        } else {
+            response.sendError(404);
+        }
+    }
+
+    void addImageUrls(List<Distribution> list) {
+        for (Distribution d : list) {
+            addImageUrl(d);
+        }
+    }
+
+    void addImageUrl(Distribution d) {
+        d.setImageUrl(userProperties.getProperty("layers_service_url") + "/distribution/map/png/" + d.getGeom_idx());
     }
 }
