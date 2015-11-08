@@ -128,8 +128,8 @@ public class TabulationService {
         m.addAttribute("title", title);
 
         String[][] grid = tabulationGridGenerator(tabulations, fid1, fid2, wkt, func);
-        double[] sumOfColumns = tabulationSumOfColumnsGenerator(grid, func);
-        double[] sumOfRows = tabulationSumOfRowsGenerator(grid, func);
+        double[] sumOfColumns = func.equals("species") ? speciesTotals(tabulations, true) : tabulationSumOfColumnsGenerator(grid, func);
+        double[] sumOfRows = func.equals("species") ? speciesTotals(tabulations, false) : tabulationSumOfRowsGenerator(grid, func);
         double[][] gridRowPercentage = tabulationGridRowPercentageGenerator(grid, sumOfColumns, func);
         double[][] gridColumnPercentage = tabulationGridColumnPercentageGenerator(grid, sumOfRows, func);
         double[][] gridTotalPercentage = tabulationGridTotalPercentageGenerator(grid, sumOfColumns, func);
@@ -176,7 +176,7 @@ public class TabulationService {
             m.addAttribute("grid", grid);
             m.addAttribute("sumofcolumns", sumOfColumns);
             m.addAttribute("sumofrows", sumOfRows);
-            m.addAttribute("total", Total);
+            if (!func.equals("species")) m.addAttribute("total", Total);
         } else if (func.equals("arearow") || func.equals("occurrencesrow") || func.equals("speciesrow")) {
             m.addAttribute("grid", grid);
             m.addAttribute("sumofcolumns", sumOfColumns);
@@ -215,8 +215,8 @@ public class TabulationService {
             m.addAttribute("id", 2);
         } else if (func.equals("species")) {
             m.addAttribute("tabulationDescription", "Number of species");
-            m.addAttribute("tabulationRowMargin", "Total species (non unique)");
-            m.addAttribute("tabulationColumnMargin", "Total species (non unique)");
+            m.addAttribute("tabulationRowMargin", "Total species");
+            m.addAttribute("tabulationColumnMargin", "Total species");
             m.addAttribute("id", 2);
         } else if (func.equals("arearow")) {
             m.addAttribute("tabulationDescription", "Area: Row%");
@@ -334,6 +334,64 @@ public class TabulationService {
                 } else if (func.equals("species") || func.equals("speciesrow") || func.equals("speciescolumn") || func.equals("speciestotal")) {
                     grid[order1.get(t.getPid1()) + 1][order2.get(t.getPid2()) + 1] = String.valueOf(t.getSpecies());
                 }
+            }
+        }
+        return grid;
+    }
+
+    private double[] speciesTotals(List<Tabulation> tabulations, boolean row) throws IOException {
+        //determine x & y field names
+        TreeMap<String, String> objects1 = new TreeMap<String, String>();
+        TreeMap<String, String> objects2 = new TreeMap<String, String>();
+
+        for (Tabulation t : tabulations) {
+            objects1.put(t.getPid1(), t.getName1());
+            objects2.put(t.getPid2(), t.getName2());
+        }
+
+        int rows = Math.max(objects1.size(), objects2.size());
+        int columns = Math.min(objects1.size(), objects2.size());
+
+        double[] grid = new double[row ? rows : columns];
+
+        //populate grid
+        if (objects1.size() <= objects2.size()) {
+            //row and column sort order and labels
+            TreeMap<String, Integer> order1 = new TreeMap<String, Integer>();
+            TreeMap<String, Integer> order2 = new TreeMap<String, Integer>();
+            int pos = 0;
+            for (String s : objects1.keySet()) {
+                order1.put(s, pos++);
+            }
+            pos = 0;
+            for (String s : objects2.keySet()) {
+                order2.put(s, pos++);
+            }
+
+            //grid
+            for (Tabulation t : tabulations) {
+                //grid[order2.get(t.getPid2()) + 1][order1.get(t.getPid1()) + 1] = String.valueOf(t.getSpecies());
+                if (row) grid[order2.get(t.getPid2())] = t.getSpeciest2() == null ? 0 : t.getSpeciest2();
+                else grid[order1.get(t.getPid1())] = t.getSpeciest1() == null ? 0 : t.getSpeciest1();
+            }
+        } else {
+            //row and column sort order and labels
+            TreeMap<String, Integer> order1 = new TreeMap<String, Integer>();
+            TreeMap<String, Integer> order2 = new TreeMap<String, Integer>();
+            int pos = 0;
+            for (String s : objects1.keySet()) {
+                order1.put(s, pos++);
+            }
+            pos = 0;
+            for (String s : objects2.keySet()) {
+                order2.put(s, pos++);
+            }
+
+            //grid
+            for (Tabulation t : tabulations) {
+                //grid[order1.get(t.getPid1()) + 1][order2.get(t.getPid2()) + 1] = String.valueOf(t.getSpecies());
+                if (!row) grid[order2.get(t.getPid2())] = t.getSpeciest2() == null ? 0 : t.getSpeciest2();
+                else grid[order1.get(t.getPid1())] = t.getSpeciest1() == null ? 0 : t.getSpeciest1();
             }
         }
         return grid;
@@ -533,8 +591,8 @@ public class TabulationService {
     public void generateTabulationCSVHTML(List<Tabulation> tabulations, HttpServletResponse resp, String func, String fid1, String fid2,
                                           String wkt, String type) throws IOException {
         String[][] grid = tabulationGridGenerator(tabulations, fid1, fid2, wkt, func);
-        double[] sumOfColumns = tabulationSumOfColumnsGenerator(grid, func);
-        double[] sumOfRows = tabulationSumOfRowsGenerator(grid, func);
+        double[] sumOfColumns = func.equals("species") ? speciesTotals(tabulations, true) : tabulationSumOfColumnsGenerator(grid, func);
+        double[] sumOfRows = func.equals("species") ? speciesTotals(tabulations, false) : tabulationSumOfRowsGenerator(grid, func);
         double[][] gridRowPercentage = tabulationGridRowPercentageGenerator(grid, sumOfColumns, func);
         double[][] gridColumnPercentage = tabulationGridColumnPercentageGenerator(grid, sumOfRows, func);
         double[][] gridTotalPercentage = tabulationGridTotalPercentageGenerator(grid, sumOfColumns, func);
@@ -605,7 +663,7 @@ public class TabulationService {
                             } else if (func.equals("occurrencestotal")) {
                                 sb.append("\"Occurrences: Total%\"");
                             } else if (func.equals("species")) {
-                                sb.append("\"Number of species (non unique)\"");
+                                sb.append("\"Number of species\"");
                             } else if (func.equals("speciesrow")) {
                                 sb.append("\"Species: Row%\"");
                             } else if (func.equals("speciescolumn")) {
@@ -645,7 +703,7 @@ public class TabulationService {
                     } else if (func.equals("occurrences")) {
                         sb.append(",\"Total occurrences\"");
                     } else if (func.equals("species")) {
-                        sb.append(",\"Total species (non unique)\"");
+                        sb.append(",\"Total species\"");
                     } else if (func.equals("arearow") || func.equals("occurrencesrow") || func.equals("speciesrow") || func.equals("areatotal") || func.equals("occurrencestotal") || func.equals("speciestotal")) {
                         sb.append(",\"Total\"");
                     } else if (func.equals("areacolumn") || func.equals("occurrencescolumn") || func.equals("speciescolumn")) {
@@ -682,7 +740,7 @@ public class TabulationService {
             } else if (func.equals("occurrences")) {
                 sb.append("\"Total occurrences\"");
             } else if (func.equals("species")) {
-                sb.append("\"Total species (non-unique)\"");
+                sb.append("\"Total species\"");
             } else if (func.equals("arearow") || func.equals("occurrencesrow") || func.equals("speciesrow") || func.equals("areatotal") || func.equals("occurrencestotal") || func.equals("speciestotal")) {
                 sb.append("\"Average\"");
             } else if (func.equals("areacolumn") || func.equals("occurrencescolumn") || func.equals("speciescolumn")) {
@@ -712,7 +770,7 @@ public class TabulationService {
                 sb.append("," + TotalPercentage + "%");
             } else if (func.equals("area")) {
                 sb.append("," + Total);
-            } else if (func.equals("occurrences") || func.equals("species")) {
+            } else if (func.equals("occurrences")) {
                 sb.append("," + Total);
             } else {
                 sb.append(",");
@@ -747,7 +805,7 @@ public class TabulationService {
                 } else if (func.equals("occurrences")) {
                     sb.append("\"Total occurrences\":" + sumOfColumns[i - 1]);
                 } else if (func.equals("species")) {
-                    sb.append("\"Total species (non unique)\":" + sumOfColumns[i - 1]);
+                    sb.append("\"Total species\":" + sumOfColumns[i - 1]);
                 } else if (func.equals("arearow") || func.equals("occurrencesrow") || func.equals("speciesrow")) {
                     sb.append("\"Total\":" + sumOfColumnsGridPercentage[i - 1] / 100);
                 } else if (func.equals("areacolumn") || func.equals("occurrencescolumn") || func.equals("speciescolumn")) {
@@ -803,7 +861,7 @@ public class TabulationService {
                 } else if (func.equals("occurrences")) {
                     sb.append("\"Total occurrences\":" + Total + ",");
                 } else if (func.equals("species")) {
-                    sb.append("\"Total species (non unique)\":" + Total + ",");
+                    //sb.append("\"Total species\":" + Total + ",");
                 }
             }
             if (sb.toString().endsWith(",")) {
