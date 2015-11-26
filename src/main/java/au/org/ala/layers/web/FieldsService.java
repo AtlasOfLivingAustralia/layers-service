@@ -17,8 +17,8 @@ package au.org.ala.layers.web;
 import au.org.ala.layers.dao.FieldDAO;
 import au.org.ala.layers.dao.ObjectDAO;
 import au.org.ala.layers.dto.Field;
+import au.org.ala.layers.dto.Layer;
 import com.googlecode.ehcache.annotations.Cacheable;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -66,11 +66,6 @@ public class FieldsService {
     public
     @ResponseBody
     List<Field> listFieldsDBOnly(HttpServletRequest req) {
-
-//        String query = "SELECT * FROM fields WHERE enabled=TRUE AND indb=TRUE;";
-//        ResultSet r = DBConnection.query(query);
-//        return Utils.resultSetToJSON(r);
-
         return fieldDao.getFieldsByDB();
     }
 
@@ -87,32 +82,42 @@ public class FieldsService {
         try {
             logger.info("calling /field/" + id);
             //test field id value
-            int len = Math.min(6, id.length());
+            int len = Math.min(8, id.length());
             id = id.substring(0, len);
-            char prefix = id.toUpperCase().charAt(0);
-            String number = id.substring(2, len);
-            boolean numberOk = false;
-            try {
-                int i = Integer.parseInt(number);
-                numberOk = true;
-            } catch (Exception e) {
-                logger.error("An error has occurred");
-                logger.error(ExceptionUtils.getFullStackTrace(e));
-                return null;
-            }
-
-            if (prefix <= 'Z' && prefix >= 'A' && numberOk) {
-                Field f = fieldDao.getFieldById(id);
-                f.setObjects(objectDao.getObjectsById(id, start, pageSize));
-
-                return f;
-            } else {
-                //error
-                return null;
-            }
+            Field f = fieldDao.getFieldById(id);
+            f.setObjects(objectDao.getObjectsById(id, start, pageSize));
+            return f;
         } catch (Exception e) {
             logger.error("field/{id} error", e);
             return null;
         }
+    }
+
+    /**
+     * This method returns all fields in a search
+     *
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/fields/search", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Field> fieldObjects(@RequestParam("q") String q, HttpServletRequest req) {
+        logger.info("search enabled layers for " + q);
+        return fieldDao.getFieldsByCriteria(q);
+    }
+
+    /**
+     * This method returns all fields in a search
+     *
+     * @param req
+     * @return
+     */
+    @RequestMapping(value = "/fields/layers/search", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<Layer> layerObjects(@RequestParam("q") String q, HttpServletRequest req) {
+        logger.info("search enabled layers for " + q);
+        return fieldDao.getLayersByCriteria(q);
     }
 }
