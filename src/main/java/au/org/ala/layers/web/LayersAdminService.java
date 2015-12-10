@@ -16,7 +16,9 @@
 package au.org.ala.layers.web;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import au.org.ala.layers.dao.FieldDAO;
 import au.org.ala.layers.dao.LayerDAO;
+import au.org.ala.layers.dto.Field;
 import au.org.ala.layers.dto.Layer;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -44,6 +46,8 @@ public class LayersAdminService {
     protected Logger logger = Logger.getLogger(this.getClass());
     @Resource(name = "layerDao")
     private LayerDAO layerDao;
+    @Resource(name = "fieldDao")
+    private FieldDAO fieldDao;
 
     /**
      * This method returns all layers
@@ -173,6 +177,13 @@ public class LayersAdminService {
             if (layer == null) {
                 System.out.println("uid is an DisplayName");
                 layer = layerDao.getLayerByDisplayName(uid);
+
+                if (layer == null) {
+                    Field field = fieldDao.getFieldById(uid);
+                    if (field != null) {
+                        layer = layerDao.getLayerById(Integer.parseInt(field.getSpid()));
+                    }
+                }
             } else {
                 System.out.println("uid is an Name");
             }
