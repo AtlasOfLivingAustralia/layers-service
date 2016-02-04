@@ -11,26 +11,16 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
 
 <div id="content">
 
-
-
-        <div class="inner">
-            <section id="content-search">
-                <h1>Spatial Web Services</h1>
-                <p style="color:red">Warning: Some of these services return OK status 200 when an error occurs. This is an issue we will be fixing soon. Please email <strong>support 'AT' ala.org.au </strong> if you receive unexpected output from a OK return status.</p>
-                <p>Following are a list of ALA Spatial web services.</p>
-            </section>
-        </div><!--inner-->
-
+    <h1>Spatial Web Services</h1>
 
     <div class="inner">
         <div class="col-wide last" style="width:100%">
-
 
         <h3>Layers Web Services</h3>
 
         <p>
             These webservices provide spatial search capabilities. These services are in addition to occurrence searching
-            services available at <a href="http://biocache.ala.org.au/ws">http://biocache.ala.org.au/ws</a>
+            services available. For a full listing of services go to at <a href="http://api.ala.org.au">api.ala.org.au</a>
             <br/>
             Please send any bug reports, suggestions for improvements or new services to:
             <strong>developers 'AT' ala.org.au</strong>
@@ -38,24 +28,24 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
 
             <ul>
                 <li>Layers<ul>
-                        <li><strong>Get a list of all layers:</strong> <a href="/ws/layers">/ws/layers</a></li>
-                        <li><strong>Get a list of all environmental/gridded layers:</strong> <a href="/ws/layers/grids">/ws/layers/grids</a></li>
-                        <li><strong>Get a list of all contextual layers:</strong> <a href="/ws/layers/shapes">/ws/layers/shapes</a></li>
+                        <li><strong>Get a list of all layers:</strong> <a href="${pageContext.request.contextPath}/layers">/layers</a></li>
+                        <li><strong>Get a list of all environmental/gridded layers:</strong> <a href="${pageContext.request.contextPath}/layers/grids">/layers/grids</a></li>
+                        <li><strong>Get a list of all contextual layers:</strong> <a href="${pageContext.request.contextPath}/layers/shapes">/layers/shapes</a></li>
                     </ul></li>
 
                 <li>Fields<ul>
-                        <li><strong>Get a list of all fields:</strong> <a href="/ws/fields">/ws/fields</a></li>
-                        <li><strong>Get information about a specific field, given a field id:</strong> /ws/field/{id} e.g. <a href="/ws/field/cl22">/ws/field/cl22</a></li>
+                        <li><strong>Get a list of all fields:</strong> <a href="${pageContext.request.contextPath}/fields">/fields</a></li>
+                        <li><strong>Get information about a specific field, given a field id:</strong> /ws/field/{id} e.g. <a href="${pageContext.request.contextPath}/field/cl22">/field/cl22</a></li>
                     </ul></li>
 
                 <li>Objects<ul>
-                        <li><strong>Get a list of objects, given the field id:</strong> /ws/objects/{id} e.g. <a href="/ws/objects/cl22">/ws/objects/cl22</a></li>
-                        <li><strong>Get information about an object, given its pid</strong> /ws/object/{pid} e.g. <a href="/ws/object/3742602">/ws/object/3742602</a></li>
-                        <li><strong>Download a shape object as KML, given its pid:</strong> /ws/shape/kml/{pid} e.g. <a href="/ws/shape/kml/3742602">/ws/shape/kml/3742602</a></li>
-                        <li><strong>Download a shape object as WKT, given its pid:</strong> /ws/shape/wkt/{pid} <a href="/ws/shape/wkt/3742602">/ws/shape/wkt/3742602</a></li>
-                        <li><strong>Download a shape object as GeoJSON, given its pid:</strong> /ws/shape/geojson/{pid} <a href="/ws/shape/geojson/3742602">/ws/shape/geojson/3742602</a></li>
-                        <li><strong>Download a shape object as a zipped ESRI shape (.shp) file, given its pid:</strong> /ws/shape/shp/{pid} <a href="/ws/shape/shp/3742602">/ws/shape/shp/3742602</a></li>
-                        <li><strong>Get the nearest objects to a coordinate</strong> /ws/objects/{id}/{lat}/{lng}?limit=40 e.g. <a href="/ws/objects/cl915/-22.465864536394/124.419921875?limit=10">/ws/objects/cl915/-22.465864536394/124.419921875?limit=10</a></li>
+                        <li><strong>Get a list of objects, given the field id:</strong> /ws/objects/{id} e.g. <a href="${pageContext.request.contextPath}/objects/cl22">/objects/cl22</a></li>
+                        <li><strong>Get information about an object, given its pid</strong> /ws/object/{pid} e.g. <a href="${pageContext.request.contextPath}/object/3742602">/object/3742602</a></li>
+                        <li><strong>Download a shape object as KML, given its pid:</strong> /ws/shape/kml/{pid} e.g. <a href="${pageContext.request.contextPath}/shape/kml/3742602">/shape/kml/3742602</a></li>
+                        <li><strong>Download a shape object as WKT, given its pid:</strong> /ws/shape/wkt/{pid} <a href="${pageContext.request.contextPath}/shape/wkt/3742602">/shape/wkt/3742602</a></li>
+                        <li><strong>Download a shape object as GeoJSON, given its pid:</strong> /ws/shape/geojson/{pid} <a href="${pageContext.request.contextPath}/shape/geojson/3742602">/shape/geojson/3742602</a></li>
+                        <li><strong>Download a shape object as a zipped ESRI shape (.shp) file, given its pid:</strong> /ws/shape/shp/{pid} <a href="${pageContext.request.contextPath}/shape/shp/3742602">/shape/shp/3742602</a></li>
+                        <li><strong>Get the nearest objects to a coordinate</strong> /ws/objects/{id}/{lat}/{lng}?limit=40 e.g. <a href="${pageContext.request.contextPath}/objects/cl915/-22.465864536394/124.419921875?limit=10">/objects/cl915/-22.465864536394/124.419921875?limit=10</a></li>
              		    <li><strong>Upload geometry as WKT:</strong> POST request to /ws/shape/upload/wkt. POST data must be a json object containing the following fields:
 							<ul>
 							    <li><strong>wkt:</strong> a WKT string describing the geometry</li>
@@ -183,25 +173,25 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
 							<strong>Return value:</strong> a JSON object containing a boolean field "deleted" which indicates whether or not the point of interest was successfully deleted e.g. {"deleted":true}
 					    </li>
 					    
-					    <li><strong>Retrieve details of all points of interest within a specified radius of a point:</strong> GET request to /intersect/poi/pointradius/{latitude}/{longitude}/{radius} - radius is in kilometres e.g. <a href="/ws/intersect/poi/pointradius/-35.30821/149.12444/5">/ws/intersect/poi/pointradius/-35.30821/149.12444/5</a></li>
-                        <li><strong>Retrieve details of all points of interest that intersect with a geometry specified using wkt:</strong> GET or POST request to /intersect/poi/wkt with request parameter "wkt" containing the wkt geometry to intersect e.g. <a href="/ws/intersect/poi/wkt?wkt=POLYGON((149.09641919556 -35.320882015603,149.15598569337 -35.320882015603,149.15598569337 -35.271424614118,149.09641919556 -35.271424614118,149.09641919556 -35.320882015603))">/ws/intersect/poi/wkt?wkt=POLYGON((149.09641919556 -35.320882015603,149.15598569337 -35.320882015603,149.15598569337 -35.271424614118,149.09641919556 -35.271424614118,149.09641919556 -35.320882015603))</a></li>
+					    <li><strong>Retrieve details of all points of interest within a specified radius of a point:</strong> GET request to /intersect/poi/pointradius/{latitude}/{longitude}/{radius} - radius is in kilometres e.g. <a href="${pageContext.request.contextPath}/intersect/poi/pointradius/-35.30821/149.12444/5">/intersect/poi/pointradius/-35.30821/149.12444/5</a></li>
+                        <li><strong>Retrieve details of all points of interest that intersect with a geometry specified using wkt:</strong> GET or POST request to /intersect/poi/wkt with request parameter "wkt" containing the wkt geometry to intersect e.g. <a href="${pageContext.request.contextPath}/intersect/poi/wkt?wkt=POLYGON((149.09641919556 -35.320882015603,149.15598569337 -35.320882015603,149.15598569337 -35.271424614118,149.09641919556 -35.271424614118,149.09641919556 -35.320882015603))">/intersect/poi/wkt?wkt=POLYGON((149.09641919556 -35.320882015603,149.15598569337 -35.320882015603,149.15598569337 -35.271424614118,149.09641919556 -35.271424614118,149.09641919556 -35.320882015603))</a></li>
                         <li><strong>Retrieve details of all points of interest that intersect with a geometry specified using geojson:</strong> GET or POST request to /intersect/poi/geojson with request parameter "geojson" containing the geojson geometry to intersect e.g. {"type":"Polygon","coordinates":[[[125.5185546875,-21.446934836644001],[128.2431640625,-21.446934836644001],[128.2431640625,-19.138942324356002],[125.5185546875,-19.138942324356002],[125.5185546875,-21.446934836644001]]]}</li>
-                        <li><strong>Retrieve details of all points of interest that intersect an object:</strong> GET request to /intersect/poi/object/{id} - where "id" is the object id e.g. <a href="/ws/intersect/poi/object/3742602">/ws/intersect/poi/object/3742602</a></li>					    
+                        <li><strong>Retrieve details of all points of interest that intersect an object:</strong> GET request to /intersect/poi/object/{id} - where "id" is the object id e.g. <a href="${pageContext.request.contextPath}/intersect/poi/object/3742602">/intersect/poi/object/3742602</a></li>					    
 				</ul></li>
 
                 <li>Search<ul>
-                        <li><strong>Search for gazetteer localities:</strong> /search?q={free text} e.g. <a href="/ws/search?q=canberra">/ws/search?q=canberra</a></li>
+                        <li><strong>Search for gazetteer localities:</strong> /search?q={free text} e.g. <a href="${pageContext.request.contextPath}/search?q=canberra">/search?q=canberra</a></li>
                     </ul></li>
 
                 <li>Intersect<ul>
-                        <li><strong>Intersect a layer(s) at a given set of coordinates. Multiple field ids or layer names can be specified separated by a comma (e.g. cl22,cl23):</strong> /ws/intersect/{id}/{latitude}/{longitude} e.g. <a href="/ws/intersect/cl22/-29.911/132.769">/ws/intersect/cl22/-29.911/132.769</a></li>
-                        <li><strong>Batch intersect a layer(s) at given coordinates. Multiple field ids or layer names can be specified separated by a comma (e.g. cl22,cl23).  Limited to 1000 coordinates.:</strong> /ws/intersect/batch e.g. <a href="/ws/intersect/batch?fids=cl22&points=-29.911,132.769,-20.911,122.769">/ws/intersect/batch?fids=cl22&amp;points=-29.911,132.769,-20.911,122.769</a></li>
+                        <li><strong>Intersect a layer(s) at a given set of coordinates. Multiple field ids or layer names can be specified separated by a comma (e.g. cl22,cl23):</strong> /ws/intersect/{id}/{latitude}/{longitude} e.g. <a href="${pageContext.request.contextPath}/intersect/cl22/-29.911/132.769">/intersect/cl22/-29.911/132.769</a></li>
+                        <li><strong>Batch intersect a layer(s) at given coordinates. Multiple field ids or layer names can be specified separated by a comma (e.g. cl22,cl23).  Limited to 1000 coordinates.:</strong> /ws/intersect/batch e.g. <a href="${pageContext.request.contextPath}/intersect/batch?fids=cl22&points=-29.911,132.769,-20.911,122.769">/intersect/batch?fids=cl22&amp;points=-29.911,132.769,-20.911,122.769</a></li>
                         <li><strong>Check batch intersect status with a batchId:</strong> /ws/intersect/batch/{batchId} e.g. /ws/intersect/batch/1234</li>
                         <li><strong>Download a finished batch intersect with a batchId as zipped file 'sample.csv':</strong> /ws/intersect/batch/download/{batchId} e.g. /ws/intersect/batch/download/1234</li>
                     </ul></li>
 
                 <li>Distributions<ul>
-                    <li><strong>Get a list of all distributions:</strong> <a href="/ws/distributions">/ws/distributions</a>
+                    <li><strong>Get a list of all distributions:</strong> <a href="${pageContext.request.contextPath}/distributions">/distributions</a>
                         <ul>
                             <li><strong>min_depth</strong> - min depth in metres</li>
                             <li><strong>max_depth</strong> - max depth in metres</li>
@@ -222,12 +212,12 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                             </li>
                         </ul>
                     </li>
-                    <li><strong>Get a count of all distributions by family:</strong> <a href="/ws/distributions/counts">/ws/distributions/counts</a>
+                    <li><strong>Get a count of all distributions by family:</strong> <a href="${pageContext.request.contextPath}/distributions/counts">/distributions/counts</a>
                     	<p>
-                    		Same supported parameters as <a href="/ws/distributions/counts">/ws/distributions/</a>.
+                    		Same supported parameters as <a href="${pageContext.request.contextPath}/distributions/counts">/distributions/</a>.
                     	</p>	
                    </li> 	                    
-                    <li><strong>Get a list of all distributions for radius:</strong> <a href="/ws/distributions/radius">/ws/distributions/radius</a>
+                    <li><strong>Get a list of all distributions for radius:</strong> <a href="${pageContext.request.contextPath}/distributions/radius">/distributions/radius</a>
                         <ul>
                             <li><strong>lat</strong> - latitude</li>
                             <li><strong>lon</strong> - longitude</li>
@@ -248,125 +238,29 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                             </li>
                         </ul>
                     </li>
-                    <li><strong>Get a count of all distributions for radius by family:</strong> <a href="/ws/distributions/radius/counts">/ws/distributions/radius</a>
+                    <li><strong>Get a count of all distributions for radius by family:</strong> <a href="${pageContext.request.contextPath}/distributions/radius/counts">/distributions/radius</a>
                     	<p>
-                    		Same supported parameters as <a href="/ws/distributions/radius">/ws/distributions/radius</a>.
+                    		Same supported parameters as <a href="${pageContext.request.contextPath}/distributions/radius">/distributions/radius</a>.
                     	</p>	
                    </li> 	                    
                     
-                    <li><strong>Get information about a specific distribution, given a spcode:</strong> /ws/distribution/{spcode} e.g. <a href="/ws/distribution/37031044">/ws/distribution/37031044</a> (Arafura Skate)</li>
-                    <li><strong>Get information about a specific distribution, given a LSID:</strong> /ws/distribution/lsid/{lsid} e.g. <a href="/ws/distribution/lsid/urn:lsid:biodiversity.org.au:afd.taxon:2386db84-1fdd-4c33-a2ea-66e13bfc8cf8">/ws/distribution/lsid/urn:lsid:biodiversity.org.au:afd.taxon:2386db84-1fdd-4c33-a2ea-66e13bfc8cf8</a> (Kapala Stingaree)</li>
+                    <li><strong>Get information about a specific distribution, given a spcode:</strong> /ws/distribution/{spcode} e.g. <a href="${pageContext.request.contextPath}/distribution/37031044">/distribution/37031044</a> (Arafura Skate)</li>
+                    <li><strong>Get information about a specific distribution, given a LSID:</strong> /ws/distribution/lsid/{lsid} e.g. <a href="${pageContext.request.contextPath}/distribution/lsid/urn:lsid:biodiversity.org.au:afd.taxon:2386db84-1fdd-4c33-a2ea-66e13bfc8cf8">/distribution/lsid/urn:lsid:biodiversity.org.au:afd.taxon:2386db84-1fdd-4c33-a2ea-66e13bfc8cf8</a> (Kapala Stingaree)</li>
                 </ul></li>
 
                 <li>Tabulation<ul>
-                        <li><strong>Get a list of tabulations:</strong> <a href="/ws/tabulations">/ws/tabulations</a></li>
-                        <!-- <li><strong>Get a list of tabulations as HTML:</strong> <a href="/ws/tabulations/html">/ws/tabulations/html</a></li> -->
-                        <li><strong>Get tabulation for a single layer as HTML:</strong> /ws/tabulation/cl22/html?wkt={valid wkt polygon geometry} e.g. <a href="/ws/tabulation/cl22/html.html?wkt=POLYGON((130%20-24,138%20-24,138%20-20,130%20-20,130%20-24))">/ws/tabulation/cl22/html.html?wkt=POLYGON((130 -24,138 -24,138 -20,130 -20,130 -24))</a></li>
-                        <li><strong>Get area tabulation for 2 layers, given their id's:</strong> /ws/tabulation/area/{id}/{id} e.g. <a href="/ws/tabulation/area/cl22/cl23">/ws/tabulation/area/cl22/cl23</a></li>
-                        <li><strong>Get area tabulation as CSV for 2 layers, given their id's:</strong> /ws/tabulation/area/{id}/{id}/tabulation.csv e.g. <a href="/ws/tabulation/area/cl22/cl23/tabulation.csv">/ws/tabulation/area/cl22/cl23/tabulation.csv</a></li>
-                        <li><strong>Get area tabulation as HTML for 2 layers, given their id's:</strong> /ws/tabulation/area/{id}/{id}/tabulation.html e.g. <a href="/ws/tabulation/area/cl22/cl23/tabulation.html">/ws/tabulation/area/cl22/cl23/tabulation.html</a></li>
-                        <li><strong>Get tabulation within an area as HTML for 2 layers, given their id's:</strong> /ws/tabulation/{id}/{id}/html?wkt={valid wkt polygon geometry} e.g. <a href="/ws/tabulation/cl22/cl23/html.html?wkt=POLYGON((130%20-24,138%20-24,138%20-20,130%20-20,130%20-24))">/ws/tabulation/cl22/cl23/html.html?wkt=POLYGON((130 -24,138 -24,138 -20,130 -20,130 -24))</a></li>
+                        <li><strong>Get a list of tabulations:</strong> <a href="${pageContext.request.contextPath}/tabulations">/tabulations</a></li>
+                        <!-- <li><strong>Get a list of tabulations as HTML:</strong> <a href="${pageContext.request.contextPath}/tabulations/html">/tabulations/html</a></li> -->
+                        <li><strong>Get tabulation for a single layer as HTML:</strong> /ws/tabulation/cl22/html?wkt={valid wkt polygon geometry} e.g. <a href="${pageContext.request.contextPath}/tabulation/cl22/html.html?wkt=POLYGON((130%20-24,138%20-24,138%20-20,130%20-20,130%20-24))">/tabulation/cl22/html.html?wkt=POLYGON((130 -24,138 -24,138 -20,130 -20,130 -24))</a></li>
+                        <li><strong>Get area tabulation for 2 layers, given their id's:</strong> /ws/tabulation/area/{id}/{id} e.g. <a href="${pageContext.request.contextPath}/tabulation/area/cl22/cl23">/tabulation/area/cl22/cl23</a></li>
+                        <li><strong>Get area tabulation as CSV for 2 layers, given their id's:</strong> /ws/tabulation/area/{id}/{id}/tabulation.csv e.g. <a href="${pageContext.request.contextPath}/tabulation/area/cl22/cl23/tabulation.csv">/tabulation/area/cl22/cl23/tabulation.csv</a></li>
+                        <li><strong>Get area tabulation as HTML for 2 layers, given their id's:</strong> /ws/tabulation/area/{id}/{id}/tabulation.html e.g. <a href="${pageContext.request.contextPath}/tabulation/area/cl22/cl23/tabulation.html">/tabulation/area/cl22/cl23/tabulation.html</a></li>
+                        <li><strong>Get tabulation within an area as HTML for 2 layers, given their id's:</strong> /ws/tabulation/{id}/{id}/html?wkt={valid wkt polygon geometry} e.g. <a href="${pageContext.request.contextPath}/tabulation/cl22/cl23/html.html?wkt=POLYGON((130%20-24,138%20-24,138%20-20,130%20-20,130%20-24))">/tabulation/cl22/cl23/html.html?wkt=POLYGON((130 -24,138 -24,138 -20,130 -20,130 -24))</a></li>
                     </ul></li>
                     
                <li>RIF-CS<ul>
-					<li><strong>Layer information in <a href="http://ands.org.au/guides/cpguide/cpgrifcs.html">RIF-CS</a> format:</strong> <a href="/ws/layers/rif-cs.xml">/ws/layers/rif-cs.xml</a></li>               
+					<li><strong>Layer information in <a href="http://ands.org.au/guides/cpguide/cpgrifcs.html">RIF-CS</a> format:</strong> <a href="${pageContext.request.contextPath}/layers/rif-cs.xml">/layers/rif-cs.xml</a></li>               
                </ul></li>
-            </ul>
-
-            <h3>Occurrences</h3>
-            <ul>
-                <li><strong>Static Species Density Heatmap </strong><a href="http://biocache.ala.org.au/ws/density/map?q=*:*">http://biocache.ala.org.au/ws/density/map?q=*:*</a> <a href="http://biocache.ala.org.au/ws/density/map?q=Sarcophilus%20harrisii">http://biocache.ala.org.au/ws/density/map?q=Sarcophilus%20harrisii</a></li> - returns heatmap image (optional param forceRefresh=true will regenerate the image)
-                <li><strong>Static Species Density Legend: </strong><a href="http://biocache.ala.org.au/ws/density/legend?q=*:*">http://biocache.ala.org.au/ws/density/legend?q=*:*</a></li> - returns associated legend image (optional param forceRefresh=true will regenerate the image)
-            </ul>
-
-            <h3>Webportal Services</h3>
-            <p>These Webportal services are available at <a href="http://biocache.ala.org.au/ws">http://biocache.ala.org.au/ws</a> </p>
-            <ul>
-                These services will include all records that satisfy the q, fq and wkt parameters.
-                <ul>
-                    <li>q - the initial query</li>
-                    <li>fq - filters to be applied to the original query</li>
-                    <li>wkt - filter polygon area to be applied to the original query</li>
-                    <li>fl - a comma separated list of fields to include (contains a list of default)</li>
-                    <li>pageSize - download limit (may be overridden)</li>
-                </ul>
-
-                <li><strong>Short Query Parameters:</strong>
-                    <ul>
-                        <li><strong>Construction:</strong> /webportal/params <br />
-                            POST service.<br />
-                            Stores q and wkt parameters.<br />
-                            Returns a short <b>value</b> that can be used as the initial q value in other services for webportal. e.g. q=qid:<b>value</b>
-                        </li>
-                        <li><strong>Test: </strong> /webportal/params/<b>value</b>
-                            Test if a short query parameter is valid.<br />
-                            Returns true or false</li>
-                    </ul>
-                </li>
-                <li><strong>Occurrences Bounding Box:</strong> /webportal/bbox <br />
-                    Returns CSV of bounding box of occurrences eg. <a href="http://biocache.ala.org.au/ws/webportal/bbox?q=macropus">http://biocache.ala.org.au/ws/webportal/bbox?q=macropus</a></li>
-                <li><strong>Data Providers</strong> /webportal/dataProviders eg. <a href="http://biocache.ala.org.au/ws/webportal/dataProviders?q=macropus">http://biocache.ala.org.au/ws/webportal/dataProviders?q=macropus</a></li>
-                <li><strong>Species List:</strong>
-                    <ul>
-                        <li><strong>Get species list:</strong> /webportal/species eg. <a href="http://biocache.ala.org.au/ws/webportal/species?q=macropus&pageSize=100">http://biocache.ala.org.au/ws/webportal/species?q=macropus&amp;pageSize=100</a></li>
-                        <li><strong>Get species list as CSV:</strong> /webportal/species.csv eg. <a href="http://biocache.ala.org.au/ws/webportal/species.csv?q=macropus&wkt=POLYGON((140:-37,151:-37,151:-26,140.1310:-26,140:-37))&pageSize=100">http://biocache.ala.org.au/ws/webportal/species.csv?q=macropus&amp;wkt=POLYGON((140:-37,151:-37,151:-26,140.1310:-26,140:-37))&amp;pageSize=100</a></li>
-                    </ul>
-                </li>
-                <li><strong>Occurrences:</strong>
-                    <ul>
-                        <li><strong>Get occurrences:</strong> /webportal/occurrences eg. <a href="http://biocache.ala.org.au/ws/webportal/occurrences?q=macropus">http://biocache.ala.org.au/ws/webportal/occurrences?q=macropus</a></li>
-                        <li><strong>Get occurrences as gzipped CSV:</strong> /webportal/occurrences.gz eg. <a href="http://biocache.ala.org.au/ws/webportal/occurrences.gz?q=macropus&fl=longitude,latitude">http://biocache.ala.org.au/ws/webportal/occurrences.gz?q=macropus&amp;fl=longitude,latitude</a></li>
-                    </ul>
-                </li>
-            </ul>
-
-            <h3>Webportal WMS Service</h3>
-            <p>A working example is located <a href="http://code.google.com/p/alageospatialportal/wiki/SimpleWMSExample">here.</a></p>
-            <ul>
-                <li><strong>Tile:</strong> /webportal/wms/reflect
-                    <ul>
-                        <li>BBOX - EPSG900913 bounding box. e.g. &amp;BBOX=12523443.0512,-2504688.2032,15028131.5936,0.3392000021413</li>
-                        <li>WIDTH - width in pixels</li>
-                        <li>HEIGHT - height in pixels</li>
-                        <li>CQL_FILTER - query parameter</li>
-                        <li>ENV - additional parameters. e.g. ENV=color%3Acd3844%3Bsize%3A3%3Bopacity%3A0.8
-                            <ul>
-                                <li>color - hex RGB values. e.g. colour:cd3844</li>
-                                <li>size - radius of points in pixels</li>
-                                <li>opacity - opacity value 0 - 1</li>
-                                <li>sel - fq parameter applied to CQL_FILTER.  Matching occurrences will be highlighted on the map in a Red circle</li>
-                                <li>uncertainty - presence of the uncertainty parameter draws uncertainty circles to a fixed maximum of 30km</li>
-                                <li>colormode - facet colouring type.  <br />
-                                    <table>
-                                        <tr><td>colourmode</td><td>description</td></tr>
-                                        <tr><td>-1</td><td>(default) use color value</td></tr>
-                                        <tr><td>grid</td><td>map as density grid.  Grid cells drawn are not restricted to within any query WKT parameters.</td></tr>
-                                        <tr><td>facetname</td><td>colour as categories in a facet</td></tr>
-                                        <tr><td>facetname,cutpoints</td><td>colour as range in a facet using the supplied
-                                                comma separated cutpoints.  4 to 10 values are required.  Include minimum and maximum.
-                                                Minimum and maximum values do not need to be accurate.
-                                                e.g. colormode:year,1800,1900,1950,1970,1990,2010</td></tr>
-                                    </table>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                <li><strong>Legend:</strong> /webportal/legend <br />
-                    Get a CSV legend.<br />
-                    Parameters:
-                    <ul>
-                        <li>q - CQL_FILTER value</li>
-                        <li>cm - ENV colormode value</li>
-                    </ul>
-                    Contains columns:
-                    <ul>
-                        <li>name - legend item name</li>
-                        <li>red - 0-255</li>
-                        <li>green - 0-255</li>
-                        <li>blue - 0-255</li>
-                        <li>count - number of occurrences for this legend category in the q parameter</li>
-                    </ul>
-                </li>
             </ul>
 
             <h3>Analysis Web Services</h3>
@@ -484,7 +378,7 @@ taglib uri="/tld/ala.tld" prefix="ala" %>
                         <li>/alaspatial/ws/jobs/image?pid=&lt;analysis id&gt; - returns the file path for the image associated with the supplied PID</li>
                         -->
                         <li>/alaspatial/ws/jobs/inputs?pid=&lt;analysis id&gt; - lists the inputs that have been supplied to the job</li>
-                        <li>/ws/jobs/cancel?pid=&lt;analysis id&gt; - cancel a job based on the PID .  E.g. http://spatial.ala.org.au/alaspatial/ws/jobs/cancel?pid=123
+                        <li>/jobs/cancel?pid=&lt;analysis id&gt; - cancel a job based on the PID .  E.g. http://spatial.ala.org.au/alaspatial/ws/jobs/cancel?pid=123
                             <br />returns nothing if successful or "job does not exist"</li>
                     </ul>
                 </li>

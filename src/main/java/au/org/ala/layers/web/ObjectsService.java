@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
@@ -45,7 +47,6 @@ public class ObjectsService {
      * This method returns all objects associated with a field
      *
      * @param id
-     * @param req
      * @return
      */
     @RequestMapping(value = "/objects/{id}", method = RequestMethod.GET)
@@ -53,24 +54,37 @@ public class ObjectsService {
     @ResponseBody
     List<Objects> fieldObjects(@PathVariable("id") String id,
                                @RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
-                               @RequestParam(value = "pageSize", required = false, defaultValue = "-1") Integer pageSize,
-                               HttpServletRequest req) {
+                               @RequestParam(value = "pageSize", required = false, defaultValue = "-1") Integer pageSize) {
         return objectDao.getObjectsById(id, start, pageSize);
+    }
+
+    /**
+     * This method returns all objects associated with a field
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/objects/csv/{id}", method = RequestMethod.GET)
+    public void fieldObjectAsCSV(@PathVariable("id") String id, HttpServletResponse resp) throws  IOException {
+        try {
+            resp.setContentType("text/csv");
+            resp.setHeader("Content-Disposition", "attachment; filename=\"objects-" + id + ".csv\"");
+            objectDao.writeObjectsToCSV(resp.getOutputStream(), id);
+        } catch (Exception e){
+            logger.error(e.getMessage(), e);
+            resp.sendError(500, "Problem performing download");
+        }
     }
 
     /**
      * This method returns a single object, provided a UUID
      *
-     * @param req
      * @return
      */
     @RequestMapping(value = "/object/{pid}", method = RequestMethod.GET)
     public
     @ResponseBody
-    Objects fieldObject(@PathVariable("pid") String pid, HttpServletRequest req) {
-//        String query = "SELECT pid, id, name, \"desc\" FROM objects WHERE pid='" + pid + "';";
-//        ResultSet r = DBConnection.query(query);
-//        return Utils.resultSetToJSON(r);
+    Objects fieldObject(@PathVariable("pid") String pid) {
         return objectDao.getObjectByPid(pid);
     }
 
@@ -78,7 +92,6 @@ public class ObjectsService {
      * This method returns all objects associated with a field
      *
      * @param id
-     * @param req
      * @return
      */
     @RequestMapping(value = "/objects/{id}/{lat}/{lng:.+}", method = RequestMethod.GET)
@@ -86,8 +99,7 @@ public class ObjectsService {
     @ResponseBody
     List<Objects> fieldObjects(@PathVariable("id") String id,
                                @PathVariable("lat") Double lat, @PathVariable("lng") Double lng,
-                               @RequestParam(value = "limit", required = false, defaultValue = "40") Integer limit,
-                               HttpServletRequest req) {
+                               @RequestParam(value = "limit", required = false, defaultValue = "40") Integer limit) {
         return objectDao.getNearestObjectByIdAndLocation(id, limit, lng, lat);
     }
 

@@ -45,7 +45,6 @@ public class LayersService {
     /**
      * This method returns all layers
      *
-     * @param req
      * @return
      */
     @Cacheable(cacheName = "layers")

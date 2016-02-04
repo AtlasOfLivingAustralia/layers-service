@@ -65,7 +65,7 @@ public class FieldsService {
     @RequestMapping(value = WS_FIELDS_DB, method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Field> listFieldsDBOnly(HttpServletRequest req) {
+    List<Field> listFieldsDBOnly() {
         return fieldDao.getFieldsByDB();
     }
 
@@ -77,8 +77,7 @@ public class FieldsService {
     @ResponseBody
     Field oneField(@PathVariable("id") String id,
                    @RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
-                   @RequestParam(value = "pageSize", required = false, defaultValue = "-1") Integer pageSize,
-                   HttpServletRequest req) {
+                   @RequestParam(value = "pageSize", required = false, defaultValue = "-1") Integer pageSize) {
         try {
             logger.info("calling /field/" + id);
             //test field id value

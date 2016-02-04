@@ -1,181 +1,134 @@
-<%-- 
-    Document   : top
-    Created on : Dec 7, 2011, 10:33:50 AM
-    Author     : ajay
---%>
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
-<%@
-        taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@
-        taglib uri="/tld/ala.tld" prefix="ala" %>
-<!DOCTYPE html>
-<html dir="ltr" lang="en-US">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="sharing biodiversity knowledge" />
+    <title>Spatial web services | Atlas of Living Australia</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="pingback" href="http://www.ala.org.au/xmlrpc.php" />
+    <title>Spatial web services | Atlas of Living Australia</title>
+    <link rel="alternate" type="application/rss+xml" title="Atlas of Living Australia &raquo; Feed" href="http://www.ala.org.au/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Atlas of Living Australia &raquo; Comments Feed" href="http://www.ala.org.au/comments/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Atlas of Living Australia &raquo; Blogs &amp; news updates Comments Feed" href="http://www.ala.org.au/blogs-news/feed/" />
 
-<head profile="http://gmpg.org/xfn/11">
-    <meta name="google-site-verification" content="MdnA79C1YfZ6Yx2qYOXWi_TYFfUvEJOQAmHNaeEWIts"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="description"
-          content="The Atlas of Living Australia provides tools to enable users of biodiversity information to find, access, combine and visualise data on Australian plants and animals"/>
-    <title>Spatial | Atlas of Living Australia</title>
+    <link rel='stylesheet' id='bootstrap.css-css'  href='http://www.ala.org.au/wp-content/themes/devdmbootstrap3/css/bootstrap.css?ver=1' type='text/css' media='all' />
+    <link rel='stylesheet' id='parent-style-css'  href='http://www.ala.org.au/wp-content/themes/devdmbootstrap3/style.css?ver=1.5.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='autocompcss-css'  href='http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/css/jquery.autocomplete.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='ala-style-css'  href='http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/css/ala-styles.css?ver=1.4' type='text/css' media='all' />
+    <link rel='stylesheet' id='fontawesome-css'  href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css?ver=4.3.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='stylesheet-css'  href='http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/style.css?ver=1' type='text/css' media='all' />
+    <script type='text/javascript' src='http://www.ala.org.au/wp-includes/js/jquery/jquery.js?ver=1.11.2'></script>
+    <script type='text/javascript' src='http://www.ala.org.au/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.ala.org.au/xmlrpc.php?rsd" />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.ala.org.au/wp-includes/wlwmanifest.xml" />
+    <!-- END GADWP Universal Tracking -->
 
-    <link rel="stylesheet" href="http://www.ala.org.au/wp-content/themes/ala2011/style.css" type="text/css"
-          media="screen"/>
-    <link rel="stylesheet" href="http://www.ala.org.au/wp-content/themes/ala2011/css/wp-styles.css" type="text/css"
-          media="screen"/>
-    <link rel="stylesheet" href="http://www.ala.org.au/wp-content/themes/ala2011/css/buttons.css" type="text/css"
-          media="screen"/>
-    <link rel="icon" type="image/x-icon" href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico"/>
-    <link rel="shortcut icon" type="image/x-icon"
-          href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico"/>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/favicon/favicon-16x16.png">
 
-    <link rel="stylesheet" type="text/css" media="screen"
-          href="http://www.ala.org.au/wp-content/themes/ala2011/css/jquery.autocomplete.css"/>
-
-    <link rel="stylesheet" type="text/css" media="screen"
-          href="http://www.ala.org.au/wp-content/themes/ala2011/css/search.css"/>
-    <link rel="stylesheet" type="text/css" media="screen"
-          href="http://www.ala.org.au/wp-content/themes/ala2011/css/skin.css"/>
-    <link rel="stylesheet" type="text/css" media="screen"
-          href="http://www.ala.org.au/wp-content/themes/ala2011/css/sf.css"/>
-
-    <link rel="stylesheet" type="text/css" media="screen" href="../includes/css/sf.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="../includes/css/demo_table.css"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="../includes/css/jquery.dataTables.min.css"/>
-    <style type="text/css">
-        .dataTables_info {
-            width: 60%;
-            float: left;
-        }
-    </style>
-
-    <script type="text/javascript" src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/html5.js"></script>
-    <link rel="alternate" type="application/rss+xml" title="Atlas of Living Australia &raquo; Feed"
-          href="http://www.ala.org.au/feed/"/>
-    <link rel="alternate" type="application/rss+xml" title="Atlas of Living Australia &raquo; Comments Feed"
-          href="http://www.ala.org.au/comments/feed/"/>
-    <link rel="alternate" type="application/rss+xml"
-          title="Atlas of Living Australia &raquo; Australia&#8217;s species Comments Feed"
-          href="http://www.ala.org.au/australias-species/feed/"/>
-    <link rel='stylesheet' id='commentvalidation-css'
-          href='http://www.ala.org.au/wp-content/plugins/comment-validation/comment-validation.css?ver=3.3.1'
-          type='text/css' media='all'/>
-
-    <script type='text/javascript'
-            src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js?ver=3.3.1'></script>
-    <script type='text/javascript'
-            src='http://www.ala.org.au/wp-content/plugins/comment-validation/jquery.validate.pack.js?ver=3.3.1'></script>
-    <script type='text/javascript'
-            src='http://www.ala.org.au/wp-content/plugins/comment-validation/comment-validation.js?ver=3.3.1'></script>
-    <script type='text/javascript'
-            src='http://www.ala.org.au/wp-content/plugins/menubar-templates/Superfish/superfish.js?ver=3.3.1'></script>
-    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.ala.org.au/xmlrpc.php?rsd"/>
-    <link rel="wlwmanifest" type="application/wlwmanifest+xml"
-          href="http://www.ala.org.au/wp-includes/wlwmanifest.xml"/>
-    <link rel='index' title='Atlas of Living Australia' href='http://www.ala.org.au/'/>
-    <link rel='up' title='Mapping &amp; analysis' href='http://www.ala.org.au/mapping-analysis/'/>
-    <link rel='prev' title='bkThe Collection Manager Story'
-          href='http://www.ala.org.au/about-home/digitisation-guidance/the-collection-manager-story/'/>
-    <link rel='next' title='Department of Sustainability, Environment, Water, Population and Communities'
-          href='http://www.ala.org.au/natural-history-collections/department-of-sustainability-environment-water-population-and-communities/'/>
-    <meta name="generator" content="WordPress 3.2.1"/>
-    <link rel='canonical' href='http://www.ala.org.au/mapping-analysis/layer-list/'/>
-
-    <!-- WP Menubar 4.10: start CSS -->
-    <!-- WP Menubar 4.10: end CSS -->
-    <style type="text/css">.broken_link, a.broken_link {
-        text-decoration: line-through;
-    }</style>
-    <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
-
-    <script type="text/javascript"
-            src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/jquery.dimensions.js"></script>
-    <script type="text/javascript"
-            src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/jquery.mousewheel.min.js"></script>
-    <script type="text/javascript"
-            src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/hoverintent-min.js"></script>
-    <script type="text/javascript"
-            src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/superfish/superfish.js"></script>
-    <script type="text/javascript"
-            src="http://www.ala.org.au/wp-content/themes/ala2011/scripts/jquery.autocomplete.js"></script>
-
-    <script type="text/javascript">
-
-        // initialise plugins
-
-        jQuery(function () {
-            jQuery('ul.sf').superfish({
-                delay: 500,
-                autoArrows: false,
-                dropShadows: false
-            });
-
-            jQuery("form#search-form input#search").autocomplete('http://bie.ala.org.au/search/auto.jsonp', {
-                extraParams: {limit: 100},
-                dataType: 'jsonp',
-                parse: function (data) {
-                    var rows = new Array();
-                    data = data.autoCompleteList;
-                    for (var i = 0; i < data.length; i++) {
-                        rows[i] = {
-                            data: data[i],
-                            value: data[i].matchedNames[0],
-                            result: data[i].matchedNames[0]
-                        };
-                    }
-                    return rows;
-                },
-                matchSubset: false,
-                formatItem: function (row, i, n) {
-                    return row.matchedNames[0];
-                },
-                cacheLength: 10,
-                minChars: 3,
-                scroll: false,
-                max: 10,
-                selectFirst: false
-            });
-            jQuery("form#search-inpage input#search").autocomplete('http://bie.ala.org.au/search/auto.jsonp', {
-                extraParams: {limit: 100},
-                dataType: 'jsonp',
-                parse: function (data) {
-                    var rows = new Array();
-                    data = data.autoCompleteList;
-                    for (var i = 0; i < data.length; i++) {
-                        rows[i] = {
-                            data: data[i],
-                            value: data[i].matchedNames[0],
-                            result: data[i].matchedNames[0]
-                        };
-                    }
-                    return rows;
-                },
-                matchSubset: false,
-                formatItem: function (row, i, n) {
-                    return row.matchedNames[0];
-                },
-                cacheLength: 10,
-                minChars: 3,
-                scroll: false,
-                max: 10,
-                selectFirst: false
-            });
-
-            jQuery("ul.button-tabs").tabs("div.panes > ul"), { history: true, effect: 'fade' };
-            jQuery("ul.tabs").tabs("div.tabs-panes-noborder > section"), { history: true, effect: 'fade' };
-        });
-    </script>
-
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<!-- <body id="page-24214" class="page page-id-24214 page-template page-template-landing_w_search-php"> -->
-<c:choose>
-<c:when test="${param.fluid}">
-<body id="page-spatial" class="fluid">
-</c:when>
-<c:otherwise>
-<body id="page-spatial" class="">
-</c:otherwise>
-</c:choose>
-<c:set var="returnUrlPath"
-       value="${initParam.serverName}${pageContext.request.requestURI}${not empty pageContext.request.queryString ? '?' : ''}${pageContext.request.queryString}"/>
-<ala:banner returnUrlPath="${returnUrlPath}"/>
-<ala:menu/>
+<body>
+
+<!-- Navbar -->
+<nav id="alatopnav" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img alt="Brand" class="img-responsive" src="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/supporting-graphic-element-flat.png">
+            </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand font-xsmall" href="http://www.ala.org.au/">The Atlas Of Living Australia</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li >
+                    <a href="http://www.ala.org.au/about-the-atlas/contact-us/">
+                        Contact us
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li >
+                    <a href="http://www.ala.org.au/get-involved/">Get involved</a>
+                </li>
+
+                <%--<li class="dropdown font-xsmall">--%>
+                    <%--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">--%>
+                        <%--ALA Apps--%>
+                        <%--<span class="caret"></span>--%>
+                    <%--</a>--%>
+                    <%--<ul class="dropdown-menu" role="menu">--%>
+                        <%--<li><a href="http://spatial.ala.org.au/">Spatial portal</a></li>--%>
+                        <%--<li ><a href="http://biocache.ala.org.au/">Occurrence search</a></li>--%>
+                        <%--<li ><a href="http://fish.ala.org.au/">Fish map</a></li>--%>
+                        <%--<li ><a href="http://regions.ala.org.au/">Regions</a></li>--%>
+                        <%--<li ><a href="http://biocache.ala.org.au/explore/your-area">Explore your area</a></li>--%>
+
+                        <%--<li class="divider"></li>--%>
+                        <%--<li><a href="http://sightings.ala.org.au/">Record a sighting</a></li>--%>
+                        <%--<li><a href="http://collections.ala.org.au/">Collections</a></li>--%>
+                        <%--<li><a href="http://volunteer.ala.org.au">DigiVol</a></li>--%>
+                        <%--<li><a href="https://fieldcapture.ala.org.au/merit">MERIT</a></li>--%>
+                        <%--<li><a href="http://www.soils2satellites.org.au/">Soils to satellite</a></li>--%>
+                        <%--<li><a href="http://lists.ala.org.au/">Traits, species lists</a></li>--%>
+                        <%--<li><a href="http://phylolink.ala.org.au/">Phylolink</a></li>--%>
+
+                        <%--<li class="divider"></li>--%>
+                        <%--<li><a href="http://root.ala.org.au/">Community portals</a></li>--%>
+                        <%--<li><a href="http://dashboard.ala.org.au">Dashboard</a></li>--%>
+                        <%--<li><a href="http://collections.ala.org.au/datasets">Datasets browser</a></li>--%>
+                    <%--</ul>--%>
+                <%--</li>--%>
+
+            </ul>
+            <form class="navbar-form navbar-left" role="search" action="http://bie.ala.org.au/search" method="get">
+                <div class="form-group">
+                    <input id="search" class="autocomplete form-control" title="Search" type="text" name="q" placeholder="Search the Atlas" autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
+            <%--<small>--%>
+                <%--<ul class="nav navbar-nav navbar-right">--%>
+                    <%--<li class="dropdown font-xsmall">--%>
+                        <%--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">--%>
+                            <%--User settings--%>
+                            <%--<span class="caret"></span>--%>
+                        <%--</a>--%>
+                        <%--<ul class="dropdown-menu" role="menu">--%>
+                            <%--<li><a href="http://www.ala.org.au/wp-login.php?redirect_to=http%3A%2F%2Fwww.ala.org.au">Log in</a></li>--%>
+                            <%--<li><a href="https://auth.ala.org.au/userdetails/registration/createAccount">Register</a></li>--%>
+                        <%--</ul>--%>
+                    <%--</li>--%>
+                <%--</ul>--%>
+            <%--</small>--%>
+
+        </div>
+        <!-- /.navbar-collapse --> </div>
+    <!-- /.container-fluid --> </nav>
+
+<div id="main" class="container dmbs-container">
