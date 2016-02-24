@@ -18,11 +18,13 @@ package au.org.ala.layers.web;
 import au.org.ala.layers.dao.LayerDAO;
 import au.org.ala.layers.dto.Layer;
 import com.googlecode.ehcache.annotations.Cacheable;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -67,13 +69,18 @@ public class LayersService {
     Layer layerObject(@PathVariable("id") String id, HttpServletRequest req) {
         Layer l = null;
         try {
-            l = layerDao.getLayerById(Integer.parseInt(id));
+            boolean enabledOnly =  true;
+            if(req.getParameter("enabledOnly") != null){
+                enabledOnly = BooleanUtils.toBoolean(req.getParameter("enabledOnly"));
+            }
+            l = layerDao.getLayerById(Integer.parseInt(id), enabledOnly);
         } catch (Exception e) {
         }
 
         if (l == null) {
             l = layerDao.getLayerByName(id);
         }
+
         return l;
     }
 

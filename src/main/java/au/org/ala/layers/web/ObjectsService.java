@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * @author jac24n
@@ -68,8 +69,11 @@ public class ObjectsService {
     public void fieldObjectAsCSV(@PathVariable("id") String id, HttpServletResponse resp) throws  IOException {
         try {
             resp.setContentType("text/csv");
-            resp.setHeader("Content-Disposition", "attachment; filename=\"objects-" + id + ".csv\"");
-            objectDao.writeObjectsToCSV(resp.getOutputStream(), id);
+            resp.setHeader("Content-Disposition", "attachment; filename=\"objects-" + id + ".csv.gz\"");
+            GZIPOutputStream gzipped = new GZIPOutputStream(resp.getOutputStream());
+            objectDao.writeObjectsToCSV(gzipped, id);
+            gzipped.flush();
+            gzipped.close();
         } catch (Exception e){
             logger.error(e.getMessage(), e);
             resp.sendError(500, "Problem performing download");
