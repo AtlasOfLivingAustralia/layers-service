@@ -72,27 +72,6 @@ public class ShapesService {
             // validate object id
             id = cleanObjectId(id);
 
-            // List<Objects> objects = objectDao.getObjectsById(id);
-            // if (objects.size() > 0) {
-            // Geometry geom = objects.get(0).getGeometry();
-            // if (type.equalsIgnoreCase("wkt")) {
-            // WKTWriter wkt = new WKTWriter();
-            // return wkt.write(geom);
-            // } else if (type.equalsIgnoreCase("kml")) {
-            // Encoder e = new Encoder(new KMLConfiguration());
-            // e.setIndenting(true);
-            // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            // e.encode(geom, KML.Geometry, baos);
-            // String kmlGeometry = new String(baos.toByteArray());
-            // return kmlGeometry.substring(kmlGeometry.indexOf('\n'));
-            // } else if (type.equalsIgnoreCase("geojson")) {
-            // return "Not supported yet.";
-            // }
-            //
-            // } else {
-            // return "";
-            // }
-
             if (type.equalsIgnoreCase("wkt")) {
                 resp.setContentType("application/wkt");
                 objectDao.streamObjectsGeometryById(os, id, type);
@@ -255,7 +234,7 @@ public class ShapesService {
     }
 
     // Create from WKT
-    @RequestMapping(value = "/shape/upload/wkt", method = RequestMethod.POST)
+    @RequestMapping(value = "/shape/upload/wkt", method = {RequestMethod.POST, RequestMethod.OPTIONS})
     @ResponseBody
     public Map<String, Object> uploadWKT(@RequestBody String json
             , @RequestParam(value = "namesearch", required = false, defaultValue = "true") Boolean namesearch
@@ -302,8 +281,33 @@ public class ShapesService {
                 }
 
                 // Use shape file url from json body
-                IOUtils.copy(new URL(shpFileUrl).openStream(), new FileOutputStream(tmpZipFile));
-                retMap.putAll(handleZippedShapeFile(tmpZipFile));
+                InputStream is = null;
+                OutputStream os = null;
+                try {
+                    is = new URL(shpFileUrl).openStream();
+                    os = new FileOutputStream(tmpZipFile);
+                    IOUtils.copy(is, os);
+                    retMap.putAll(handleZippedShapeFile(tmpZipFile));
+                    os.flush();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                } finally {
+                    if (is != null) {
+                        try {
+                            is.close();
+                        } catch (Exception e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+                    if (os != null) {
+                        try {
+                            os.close();
+                        } catch (Exception e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                    }
+                }
+
             } else {
                 retMap.put("error", StringUtils.join(reqBodyParser.getErrorMessages(), ","));
             }
@@ -492,9 +496,10 @@ public class ShapesService {
             return true;
         }
 
+        GetMethod get = null;
         try {
             HttpClient httpClient = new HttpClient();
-            GetMethod get = new GetMethod(MessageFormat.format(IntersectConfig.getApiKeyCheckUrlTemplate(), apiKey));
+            get = new GetMethod(MessageFormat.format(IntersectConfig.getApiKeyCheckUrlTemplate(), apiKey));
 
             int returnCode = httpClient.executeMethod(get);
             if (returnCode != 200) {
@@ -507,26 +512,16 @@ public class ShapesService {
             Map parsedJSON = mapper.readValue(responseText, Map.class);
 
             return (Boolean) parsedJSON.get("valid");
-/*
-            if (valid) {
-                String keyUserId = (String) parsedJSON.get("userId");
-                String app = (String) parsedJSON.get("app");
-
-                if (!keyUserId.equals(userId)) {
-                    return false;
-                }
-
-                if (!app.equals(IntersectConfig.getSpatialPortalAppName())) {
-                    return false;
-                }
-
-                return true;
-            } else {
-                return false;
-            }
-*/
         } catch (Exception ex) {
             throw new RuntimeException("Error checking API key");
+        } finally {
+            if (get != null) {
+                try {
+                    get.releaseConnection();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
         }
     }
 
