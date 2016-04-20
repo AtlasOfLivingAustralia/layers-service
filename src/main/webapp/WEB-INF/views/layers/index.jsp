@@ -24,7 +24,7 @@
 <div class="row">
 
     <style>
-        .wrapword {
+        .wrapword, th {
             max-width:80px;
             white-space: -moz-pre-wrap !important;
             white-space: -pre-wrap;
@@ -71,18 +71,16 @@
                             <th>Metadata contact organization</th>
                             <th>Keywords</th>
                             <th>Preview</th>
-                            <!-- <th>Reference date</th> -->
-                            <!--<th>Actions</th>-->
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach items="${layers}" var="layer" varStatus="status">
                             <tr style="width:100%">
-                                <td>${layer.classification1}</td>
-                                <td>${layer.classification2}</td>
-                                <td><a href="/layers/more/${layer.name}">${layer.displayname}</a></td>
-                                <td style="max-width:80px" class="wrapword">${layer.name}</td>
-                                <td class="wrapword">${layer.description}</td>
+                                <td class="wrapword">${layer.classification1}</td>
+                                <td class="wrapword">${layer.classification2}</td>
+                                <td style="max-width:80px" class="wrapword"><a href="/layers/more/${layer.name}">${layer.displayname}</a></td>
+                                <td class="wrapword">${layer.name}</td>
+                                <td style="max-width:160px" class="wrapword">${layer.description}</td>
                                 <c:choose>
                                     <c:when test="${layer.type eq 'Environmental'}">
                                         <td class="wrapword">Environmental (gridded) ${layer.scale}</td>
@@ -96,18 +94,12 @@
                                 </c:choose>
                                 <td class="wrapword">${layer.source}</td>
                                 <td class="wrapword">${layer.keywords}</td>
-                                <td class="wrapword">
+                                <td>
                                     <img src="/output/layerthumbs/ALA:${layer.name}.jpg" width="200px"/>
                                     <br/>
                                     <a href="http://spatial.ala.org.au/?layers=${layer.name}">Click to view this
                                         layer</a>
                                 </td>
-                                <!-- <td>${layer.citation_date}</td> -->
-                                <!--
-                                    <td>
-                                        <a href="layers/edit/${layer.id}">edit</a>
-                                    </td>
-                                    -->
                             </tr>
                         </c:forEach>
                         </tbody>
