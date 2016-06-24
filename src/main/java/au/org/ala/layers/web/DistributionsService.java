@@ -20,18 +20,17 @@ import au.org.ala.layers.dto.AttributionDTO;
 import au.org.ala.layers.dto.Distribution;
 import au.org.ala.layers.dto.Facet;
 import au.org.ala.layers.dto.MapDTO;
-import au.org.ala.layers.util.AttributionCache;
-import au.org.ala.layers.util.MapCache;
-import au.org.ala.layers.util.SpatialConversionUtils;
-import au.org.ala.layers.util.UserProperties;
+import au.org.ala.layers.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,18 +47,18 @@ public class DistributionsService {
     private final String WS_DISTRIBUTIONS_RADIUS = "/distributions/radius";
     private final String WS_DISTRIBUTIONS_RADIUS_COUNTS = "/distributions/radius/counts";
     private final String WS_DISTRIBUTION_ID = "/distribution/{spcode}";
-    private final String WS_DISTRIBUTION_LSID = "/distribution/lsid/{lsid:.+}";
-    private final String WS_DISTRIBUTION_OVERVIEWMAP = "/distribution/map/{lsid:.+}";
+    private final String WS_DISTRIBUTION_LSID = "/distribution/lsid/**";
+    private final String WS_DISTRIBUTION_OVERVIEWMAP = "/distribution/map/**";
     private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG = "/distribution/map/png/{geomIdx}";
     private final String WS_DISTRIBUTION_OVERVIEWMAP_SEED = "/distribution/map/seed";
-    private final String WS_DISTRIBUTION_OUTLIERS = "/distribution/outliers/{lsid:.+}";
+    private final String WS_DISTRIBUTION_OUTLIERS = "/distribution/outliers/**";
     private final String WS_ATTRIBUTION_CACHE = "/attribution/clearCache";
 
-    private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_LSID = "/distribution/map/lsid/{lsid:.+}";
+    private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_LSID = "/distribution/map/lsid/**";
     private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_SPCODE = "/distribution/map/spcode/{spcode:.+}";
     private final String WS_DISTRIBUTION_OVERVIEWMAP_PNG_NAME = "/distribution/map/name/{scientificName:.+}";
-    private final String WS_DISTRIBUTION_LSIDS = "/distribution/lsids/{lsid:.+}";
-    private final String WS_DISTRIBUTION_OVERVIEWMAPS = "/distribution/maps/{lsid:.+}";
+    private final String WS_DISTRIBUTION_LSIDS = "/distribution/lsids/**";
+    private final String WS_DISTRIBUTION_OVERVIEWMAPS = "/distribution/maps/**";
     
 
     /**
@@ -225,9 +224,10 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_LSID, method = RequestMethod.GET)
     public
     @ResponseBody
-    Distribution getDistribution(@PathVariable String lsid,
-                                 @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt,
-                                 HttpServletResponse response) throws Exception {
+    Distribution getDistribution(@RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt,
+                                 HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lsid = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        lsid = filterLsid(lsid);
         List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION, noWkt);
         if (distributions != null && !distributions.isEmpty()) {
             Distribution d = distributions.get(0);
@@ -245,9 +245,10 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_LSIDS, method = RequestMethod.GET)
     public
     @ResponseBody
-    List<Distribution> getDistributions(@PathVariable String lsid,
-                                        @RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt,
-                                        HttpServletResponse response) throws Exception {
+    List<Distribution> getDistributions(@RequestParam(value = "nowkt", required = false, defaultValue = "false") Boolean noWkt,
+                                        HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lsid = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        lsid = filterLsid(lsid);
         List<Distribution> distributions = distributionDao.getDistributionByLSID(new String[]{lsid}, Distribution.EXPERT_DISTRIBUTION, noWkt);
         if (distributions != null && !distributions.isEmpty()) {
             addImageUrls(distributions);
@@ -264,8 +265,11 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAP, method = RequestMethod.GET)
     public
     @ResponseBody
-    MapDTO getDistributionOverviewMap(@PathVariable String lsid, @RequestParam(value = "height", required = false, defaultValue = "504") Integer height,
-                                      @RequestParam(value = "width", required = false, defaultValue = "512") Integer width, HttpServletResponse response) throws Exception {
+    MapDTO getDistributionOverviewMap(@RequestParam(value = "height", required = false, defaultValue = "504") Integer height,
+                                      @RequestParam(value = "width", required = false, defaultValue = "512") Integer width,
+                                      HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lsid = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        lsid = filterLsid(lsid);
         Distribution distribution = distributionDao.findDistributionByLSIDOrName(lsid, Distribution.EXPERT_DISTRIBUTION);
         if (distribution != null) {
             MapDTO m = new MapDTO();
@@ -292,8 +296,11 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAPS, method = RequestMethod.GET)
     public
     @ResponseBody
-    List<MapDTO> getDistributionOverviewMaps(@PathVariable String lsid, @RequestParam(value = "height", required = false, defaultValue = "504") Integer height,
-                                             @RequestParam(value = "width", required = false, defaultValue = "512") Integer width, HttpServletResponse response) throws Exception {
+    List<MapDTO> getDistributionOverviewMaps(@RequestParam(value = "height", required = false, defaultValue = "504") Integer height,
+                                             @RequestParam(value = "width", required = false, defaultValue = "512") Integer width,
+                                             HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lsid = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        lsid = filterLsid(lsid);
         List<Distribution> distributions = distributionDao.findDistributionsByLSIDOrName(lsid, Distribution.EXPERT_DISTRIBUTION);
         List<MapDTO> maps = new ArrayList<MapDTO>();
         if (distributions != null && distributions.size() > 0) {
@@ -386,7 +393,10 @@ public class DistributionsService {
     @RequestMapping(value = WS_DISTRIBUTION_OUTLIERS, method = RequestMethod.POST)
     public
     @ResponseBody
-    Map<String, Double> getDistributionOutliers(@PathVariable String lsid, @RequestParam(value = "pointsJson", required = true) String pointsJson, HttpServletResponse response) throws Exception {
+    Map<String, Double> getDistributionOutliers(@RequestParam(value = "pointsJson", required = true) String pointsJson,
+                                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lsid = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        lsid = filterLsid(lsid);
         JSONParser parser = new JSONParser();
         try {
             Map<String, Map<String, Double>> pointsMap = (Map<String, Map<String, Double>>) parser.parse(pointsJson);
@@ -410,7 +420,9 @@ public class DistributionsService {
      * get distribution image
      */
     @RequestMapping(value = WS_DISTRIBUTION_OVERVIEWMAP_PNG_LSID, method = RequestMethod.GET)
-    public void getDistributionOverviewMapPngLsid(@PathVariable String lsid, HttpServletResponse response) throws Exception {
+    public void getDistributionOverviewMapPngLsid(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String lsid = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        lsid = filterLsid(lsid);
         getImage(response, lsid, null, null);
     }
 
@@ -480,5 +492,18 @@ public class DistributionsService {
 
     void addImageUrl(Distribution d) {
         d.setImageUrl(userProperties.getProperty("layers_service_url") + "/distribution/map/png/" + d.getGeom_idx());
+    }
+
+    String filterLsid(String lsid) {
+        if (lsid != null) {
+            String lower = lsid.toLowerCase();
+            if (lower.endsWith(".png") || lower.endsWith(".jpg")) {
+                lsid = lsid.substring(0, lsid.length() - 4);
+            } else if (lower.endsWith(".json")) {
+                lsid = lsid.substring(0, lsid.length() - 5);
+            }
+        }
+
+        return lsid;
     }
 }
