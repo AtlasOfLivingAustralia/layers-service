@@ -81,18 +81,6 @@ public class TabulationService {
 
     }
 
-    /*
-     * list distribution table records, GET
-     */
-    @RequestMapping(value = "/tabulation/{func1}/{func2}/{fid1}/{fid2}/tabulation.html", method = {RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView displayTabulation(@PathVariable("func1") String func1, @PathVariable("func2") String func2, @PathVariable("fid1") String fid1, @PathVariable("fid2") String fid2,
-                                          @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
-                                          HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String func = func1 + func2;
-        List<Tabulation> tabulations = tabulationDao.getTabulation(fid1, fid2, wkt);
-        return generateTabulation(tabulations, func, fid1, fid2, wkt);
-    }
-
     @RequestMapping(value = "/tabulation/{func1}/{fid1}/{fid2}/tabulation.html", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView displayTabulation(@PathVariable("func1") String func1, @PathVariable("fid1") String fid1, @PathVariable("fid2") String fid2,
                                           @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
