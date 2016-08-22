@@ -868,7 +868,7 @@ public class TabulationService {
     /*
      * list distribution table records, GET
      */
-    @RequestMapping(value = "/tabulation/{func1}/{func2}/{fid1}/tabulation.html", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/single/{func1}/{func2}/{fid1}/tabulation.html", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView displayTabulationSingle(@PathVariable("func1") String func1, @PathVariable("func2") String func2, @PathVariable("fid1") String fid1,
                                                 @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
                                                 HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -877,7 +877,7 @@ public class TabulationService {
         return generateTabulation(tabulations, func, fid1, null, wkt);
     }
 
-    @RequestMapping(value = "/tabulation/{func1}/{fid1}/tabulation.html", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/single/{func1}/{fid1}/tabulation.html", method = {RequestMethod.GET, RequestMethod.POST})
     public ModelAndView displayTabulationSingle(@PathVariable("func1") String func1, @PathVariable("fid1") String fid1,
                                                 @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
                                                 HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -888,7 +888,7 @@ public class TabulationService {
      * list distribution table records, GET
      */
 
-    @RequestMapping(value = "/tabulation/{func1}/{func2}/{fid1}/tabulation.{type}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/single/{func1}/{func2}/{fid1}/tabulation.{type}", method = {RequestMethod.GET, RequestMethod.POST})
     public void displayTabulationSingleCSVHTML(@PathVariable("func1") String func1, @PathVariable("func2") String func2, @PathVariable("fid1") String fid1, @PathVariable("type") String type,
                                                @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
                                                HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -897,7 +897,7 @@ public class TabulationService {
         generateTabulationCSVHTML(tabulations, resp, func, fid1, null, wkt, type);
     }
 
-    @RequestMapping(value = "/tabulation/{func1}/{fid1}/tabulation.{type}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/single/{func1}/{fid1}/tabulation.{type}", method = {RequestMethod.GET, RequestMethod.POST})
     public void displayTabulationSingleCSVHTML(@PathVariable("func1") String func1, @PathVariable("fid1") String fid1, @PathVariable("type") String type,
                                                @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
                                                HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -905,14 +905,14 @@ public class TabulationService {
         generateTabulationCSVHTML(tabulations, resp, func1, fid1, null, wkt, type);
     }
 
-    @RequestMapping(value = "/tabulation/{fid}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/single/{fid}", method = {RequestMethod.GET, RequestMethod.POST})
     public List displayTabulationSingleWkt(@PathVariable("fid") String fid,
                                            @RequestParam(value = "wkt", required = false, defaultValue = "") String wkt,
                                            HttpServletRequest req) throws IOException {
         return tabulationDao.getTabulationSingle(fid, wkt);
     }
 
-    @RequestMapping(value = "/tabulation/{fid}/{pid}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/single/{fid}/{pid}", method = {RequestMethod.GET, RequestMethod.POST})
     public List displayTabulationSinglePid(@PathVariable("fid") String fid,
                                            @PathVariable("pid") String pid,
                                            HttpServletRequest req) throws IOException {
