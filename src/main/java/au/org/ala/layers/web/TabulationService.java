@@ -912,7 +912,7 @@ public class TabulationService {
         return tabulationDao.getTabulationSingle(fid, wkt);
     }
 
-    @RequestMapping(value = "/tabulation/single/{fid}/{pid}", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/tabulation/{fid}/{pid}", method = {RequestMethod.GET, RequestMethod.POST})
     public List displayTabulationSinglePid(@PathVariable("fid") String fid,
                                            @PathVariable("pid") String pid,
                                            HttpServletRequest req) throws IOException {
