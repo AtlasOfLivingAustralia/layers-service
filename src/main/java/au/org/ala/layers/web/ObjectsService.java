@@ -168,4 +168,13 @@ public class ObjectsService {
             return objectDao.getObjectsByIdAndArea(id, limit, wkt);
         }
     }
+
+    @RequestMapping(value = "/object/intersect/{pid}/{latitude}/{longitude}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Objects fieldObject(@PathVariable("pid") String pid,
+                        @PathVariable("latitude") Double latitude,
+                        @PathVariable("longitude") Double longitude) {
+        return objectDao.intersectObject(pid, latitude, longitude);
+    }
 }
