@@ -2,6 +2,7 @@ package au.org.ala.layers.web;
 
 import au.org.ala.layers.dao.SearchDAO;
 import au.org.ala.layers.dto.SearchObject;
+import au.org.ala.layers.intersect.IntersectConfig;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,7 +41,17 @@ public class SearchService {
     List<SearchObject> search(HttpServletRequest req) {
         String q = req.getParameter("q");
         String limit = req.getParameter("limit");
-        String types = req.getParameter("types");
+        String userObjects = req.getParameter("userObjects");
+
+        boolean bUserObjects = true;
+        try {
+            if (userObjects != null) {
+                bUserObjects = Boolean.parseBoolean(userObjects);
+            }
+        } catch (Exception e) {
+            logger.debug("failed to parse userObjects to boolean", e);
+        }
+
         int lim = 20;
 
         if (q == null) {
@@ -48,7 +60,6 @@ public class SearchService {
         try {
             q = URLDecoder.decode(q, "UTF-8");
             q = q.trim().toLowerCase();
-            //TODO: check q
             if (limit != null) {
                 lim = Integer.parseInt(limit);
             }
@@ -56,24 +67,19 @@ public class SearchService {
             logger.error("An error has occurred constructing search term.");
             logger.error(ExceptionUtils.getFullStackTrace(ex));
         }
-        if (types != null) {
-            try {
-                types = URLDecoder.decode(types, "UTF-8");
-            } catch (UnsupportedEncodingException ex) {
-                logger.error("An error has occurred constructing search term.");
-                logger.error(ExceptionUtils.getFullStackTrace(ex));
+
+        List<SearchObject> objects;
+        if (bUserObjects) {
+            objects = searchDao.findByCriteria(q, lim);
+        } else {
+            objects = new ArrayList<SearchObject>();
+            for (SearchObject so : searchDao.findByCriteria(q, lim * 2)) {
+                if (!so.getFid().equals(IntersectConfig.getUploadedShapesFieldId())) {
+                    objects.add(so);
+                }
             }
         }
 
-//        StringBuilder sb = new StringBuilder();
-//
-//        String query = "SELECT * FROM searchobjects('%" + q + "%',20)";
-//        logger.info("Executing query " + query);
-//
-//        ResultSet rs = DBConnection.query(query);
-//        sb.append(Utils.resultSetToJSON(rs));
-//        return sb.toString();
-
-        return searchDao.findByCriteria(q, lim);
+        return objects;
     }
 }
