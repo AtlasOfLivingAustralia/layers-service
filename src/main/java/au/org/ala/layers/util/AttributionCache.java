@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * A small cache for data resource attribution.
@@ -16,6 +17,8 @@ public class AttributionCache {
 
     private static AttributionCache attributionCache;
     private Map<String, AttributionDTO> cache = new HashMap<String, AttributionDTO>();
+
+    private Properties userProperties = (new UserProperties()).getProperties();
 
     private AttributionCache() {
     }
@@ -31,7 +34,9 @@ public class AttributionCache {
         if (a == null) {
             ObjectMapper om = new ObjectMapper();
             om.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            a = om.readValue(new URL("http://collections.ala.org.au/ws/dataResource/" + dataResourceUid), AttributionDTO.class);
+
+            String url = userProperties.getProperty("collectory.baseURL", "http://collections.ala.org.au");
+            a = om.readValue(new URL(url + "/ws/dataResource/" + dataResourceUid), AttributionDTO.class);
             cache.put(dataResourceUid, a);
         }
         return a;
