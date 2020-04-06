@@ -7,6 +7,12 @@ assignees: ''
 
 ---
 
+## Description
+
+Describe the layer that is being proposed here:
+
+
+
 ## Investigation and approval
 
 Check the boxes below that apply, including comments where necessary, and then refer this issue to the appropriate person for approval:
