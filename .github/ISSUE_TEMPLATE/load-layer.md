@@ -71,9 +71,8 @@ export FIELD_ID=... # This is the cl/el identifier for the field
 Fetch 'https://sampling.ala.org.au/sampling-service/fieldsdb' and double-check that the field now exists and 'indb: true' is on the field that was added
 TODO: automate this using 'jq'.
 ```
-- [ ] Run `Complete Resample` on `aws-scjenkins` (Or wait for the weekly automated job)
-- [ ] Run `Complete Reprocess` on `aws-scjenkins` (Or wait for the weekly automated job)
-- [ ] Run the `Complete Reindex` on `aws-scjenkins` (Or wait for the next automated job after the Complete Reprocess)
+- [ ] Run `Complete Process and Sample` jenkins job on `aws-scjenkins` `http://aws-scjenkins.ala:9193/job/Complete%20Process%20and%20Sample/` (Or wait for the weekly automated job)
+- [ ] Run the `Complete Reindex` on `aws-scjenkins` `http://aws-scjenkins.ala:9193/job/Complete%20Indexing/job/MASTER%20-%20Complete%20Re-index/` (Or wait for the next automated job after the `Complete Process and Sample`)
 - [ ] Check using biocache.ala.org.au that expected records have the new `cl` value (individual record displays are sourced from cassandra)
 - [ ] Check using biocache.ala.org.au that searches on the new `cl` value succeed (search results are sourced from solr)
 - [ ] Check that the new field exists in each of the biocache-service `/ws/index/fields` calls, noting that calls to `/ws/index/fields` on different servers are known to be inconsistent. https://github.com/AtlasOfLivingAustralia/biocache-service/issues/263
