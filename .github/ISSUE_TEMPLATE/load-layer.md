@@ -23,11 +23,11 @@ assignees: ''
 - [ ] Supersedes an existing layer (deprecation or deletion)
 - [ ] Anticipates future requirements
 - [ ] Supports nationally significant projects (which themselves would need some evaluation, but GBR management given World Heritage status and threats would pass)
+- [ ] Externally funded? This may relate to project support.
 - [ ] Openly available (free and open source data).
-- [ ] Externally funded? Probably relates to (14).
-- [ ] Obtain approval from ALA Management to load layer based on the investigation
 
 ## Loading the layer
+- [ ] Obtain approval from ALA Management to load layer based on an evaluation
 
 Once layer loading has been approved, the following are the steps required to load, integrate, and test it.
 
