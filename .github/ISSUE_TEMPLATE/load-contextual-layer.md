@@ -48,6 +48,7 @@ Once layer loading has been approved, the following are the steps required to lo
 - [ ] Upload layer at: https://nectar-spatial-staging.ala.org.au/ws/manageLayers/uploads
 - [ ] Once the shapefile upload is complete, choose `Create layer`
 - [ ] Enter the layer metadata and choose create layer
+- [ ] Wait until the layer is finished before creating a field, or the field creation will silently fail. Once the task list shows the create layer task and any other successive tasks as complete, you may continue. https://nectar-spatial-staging.ala.org.au/ws/tasks
 - [ ] Once the layer is loaded, create one or more fields
 - [ ] Once the fields are created, check that they are visible and correct on nectar-spatial-staging spatial-hub instance by adding the new Layer to a map
 - [ ] If not visible, run `https://nectar-spatial-staging.ala.org.au/ws/tasks/create?name=Thumbnails`
